@@ -9,12 +9,10 @@ services:
     envVars:
       - key: PORT
         value: 8080 # Đảm bảo PORT được đặt đúng
-        sync: false
       - key: MONGODB_URI
         value: mongodb+srv://tiendev:wtcrF8gcBd6QOOJz@cluster0.8mdyaai.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0
-        sync: false
     region: singapore
-    rootDir: personal-crm-backend
-    buildCommand: yarn install
-    startCommand: yarn start
+    rootDir: personal-crm-backend # Chỉ định thư mục gốc của backend
+    buildCommand: yarn install # Cài đặt dependencies
+    startCommand: yarn start # Chạy lệnh start từ package.json
 version: "1"
