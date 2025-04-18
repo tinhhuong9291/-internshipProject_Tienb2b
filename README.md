@@ -36,31 +36,12 @@ A full-stack personal CRM system to manage your customers, clients, partners, or
 
 ---
 
-## ⚙️ Project Structure
-
-personal-crm/
-├── backend/
-│ ├── models/
-│ ├── routes/
-│ ├── controllers/
-│ ├── .env
-│ └── server.js
-├── frontend/
-│ ├── public/
-│ ├── src/
-│ │ ├── components/
-│ │ ├── views/
-│ │ └── App.vue
-│ └── vite.config.js
-
----
-
 ## 🚀 Getting Started
 
 ### 1. Clone the repository
 
 \`\`\`bash
-git clone https://github.com/your-username/personal-crm.git
+git clone https://github.com/tinhhuong9291/-internshipProject_Tienb2b.git
 cd personal-crm
 \`\`\`
 
