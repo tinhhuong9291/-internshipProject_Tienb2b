@@ -125,15 +125,9 @@ Use Postman or Swagger to test. Ensure MongoDB is connected and the backend is r
 
 ---
 
-## 📄 License
-
-This project is open-source under the [MIT License](LICENSE).
-
----
-
 ## ✍️ Author
 
-Made with 💙 by [Your Name](https://github.com/your-username)
+Made with 💙 by [ThanhTien](https://github.com/tinhhuong9291)
 `;
 
 fs.writeFileSync('README.md', content.trim(), 'utf8');
