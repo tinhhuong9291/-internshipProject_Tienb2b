@@ -1,13 +1,13 @@
 <script>
 import AddProfile from "./components/AddProfile.vue";
 import ProfileList from "./components/ProfileList.vue";
+import EditProfile from "./components/EditProfile.vue";
 
 export default {
   components: {
     AddProfile,
     ProfileList,
-    EditProfile: () => import("./components/EditProfile.vue"),
-    DeleteProfile: () => import("./components/DeleteProfile.vue"),
+    EditProfile,
   },
   data() {
     return {
@@ -15,6 +15,7 @@ export default {
       searchQuery: "",
       isLoading: false,
       errorMessage: "",
+      selectedProfile: null, // Profile được chọn để edit
     };
   },
   computed: {
@@ -65,29 +66,6 @@ export default {
         console.error("Error adding profile:", error);
       }
     },
-    //Edit profile method
-    async editProfile(index) {
-      const profile = this.profiles[index];
-      this.errorMessage = "";
-      try {
-        const response = await fetch(
-          `http://localhost:8080/api/customers/${profile._id}`,
-          {
-            method: "PUT",
-            headers: {
-              "Content-Type": "application/json",
-            },
-            body: JSON.stringify(profile),
-          }
-        );
-        if (!response.ok) {
-          throw new Error(`Error: ${response.statusText}`);
-        }
-      } catch (error) {
-        this.errorMessage = "Failed to edit profile. Please try again.";
-        console.error("Error editing profile:", error);
-      }
-    },
     async deleteProfile(index) {
       const profile = this.profiles[index];
       this.errorMessage = "";
@@ -110,6 +88,18 @@ export default {
     handleSearchInput(event) {
       this.searchQuery = event.target.value;
     },
+    handleSelectProfile(profile) {
+      this.selectedProfile = profile; // Gán profile được chọn
+    },
+    updateProfile(updatedProfile) {
+      const index = this.profiles.findIndex(
+        (profile) => profile._id === updatedProfile._id
+      );
+      if (index !== -1) {
+        this.profiles.splice(index, 1, updatedProfile); // Cập nhật profile trong danh sách
+      }
+      this.selectedProfile = null; // Đóng giao diện chỉnh sửa
+    },
   },
   mounted() {
     this.fetchProfiles();
@@ -121,11 +111,16 @@ export default {
   <div id="app">
     <header>
       <h1>Customer Management</h1>
+      <label for="searchQuery">Search Profiles:</label>
+      <!-- Thêm label -->
       <input
         type="text"
+        id="searchQuery"
+        name="searchQuery"
         v-model="searchQuery"
         placeholder="Search profiles..."
-        @input="handleSearchInput"
+        autocomplete="off"
+        @keyup.enter="handleSearchInput"
       />
     </header>
     <main>
@@ -133,10 +128,21 @@ export default {
       <ProfileList
         :profiles="filteredProfiles"
         @delete-profile="deleteProfile"
+        @select-profile="handleSelectProfile"
       />
       <div v-if="isLoading" class="loading">Loading profiles...</div>
       <div v-if="errorMessage" class="error">{{ errorMessage }}</div>
     </main>
+
+    <EditProfile
+      v-if="selectedProfile"
+      :profile="selectedProfile"
+      @profile-updated="updateProfile"
+      @close="selectedProfile = null"
+    />
+    <div v-if="!filteredProfiles.length && !isLoading && !errorMessage">
+      <p>No profiles found.</p>
+    </div>
   </div>
 </template>
 

@@ -5,8 +5,6 @@
         v-for="(profile, index) in profiles"
         :key="index"
         class="profile-card"
-        :class="{ active: selectedProfileIndex === index }"
-        @click="selectProfile(index)"
       >
         <div class="profile-avatar">
           {{ profile.name.charAt(0).toUpperCase() }}
@@ -14,23 +12,8 @@
         <div class="profile-info">
           <h3>{{ profile.name }}</h3>
           <p class="email">{{ profile.email }}</p>
-          <div class="profile-meta">
-            <span class="timezone">
-              <i class="fas fa-clock"></i>
-              {{ profile.timezone || "N/A" }}
-            </span>
-            <span class="last-signin">
-              <i class="fas fa-sign-in-alt"></i>
-              {{ profile.signInAt || "N/A" }}
-            </span>
-          </div>
-        </div>
-        <div class="profile-actions">
-          <button class="edit-btn" @click.stop="$emit('edit-profile', index)">
-            <i class="fas fa-edit"></i>
-          </button>
-          <button class="delete-btn" @click.stop="$emit('delete-profile', index)">
-            <i class="fas fa-trash"></i>
+          <button @click="$emit('select-profile', profile)" class="edit-button">
+            Edit
           </button>
         </div>
       </div>
@@ -46,144 +29,68 @@ export default {
       required: true,
     },
   },
-  data() {
-    return {
-      selectedProfileIndex: null,
-    };
-  },
-  computed: {
-    selectedProfile() {
-      return this.profiles[this.selectedProfileIndex] || null;
-    },
-  },
-  methods: {
-    selectProfile(index) {
-      this.selectedProfileIndex = index;
-    },
-  },
 };
 </script>
 
 <style scoped>
 .profile-list {
-  margin-top: 2rem;
+  display: flex;
+  flex-direction: column;
 }
 
 .profiles-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-  gap: 1.5rem;
-  padding: 1rem;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 16px;
 }
 
 .profile-card {
-  background-color: var(--card-background);
-  border-radius: 0.75rem;
-  padding: 1.5rem;
-  box-shadow: var(--shadow-md);
-  transition: all 0.2s ease;
-  position: relative;
-  cursor: pointer;
-  display: flex;
-  flex-direction: column;
-  gap: 1rem;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  padding: 16px;
+  transition: transform 0.2s;
 }
 
 .profile-card:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1);
-}
-
-.profile-card.active {
-  border: 2px solid var(--primary-color);
+  transform: scale(1.05);
 }
 
 .profile-avatar {
-  width: 48px;
-  height: 48px;
-  background-color: var(--primary-color);
+  font-size: 24px;
+  font-weight: bold;
+  background-color: #007bff;
   color: white;
-  border-radius: 50%;
+  width: 50px;
+  height: 50px;
   display: flex;
-  align-items: center;
   justify-content: center;
-  font-size: 1.25rem;
-  font-weight: 600;
-}
-
-.profile-info {
-  flex: 1;
+  align-items: center;
+  border-radius: 50%;
+  margin-bottom: 8px;
 }
 
 .profile-info h3 {
   margin: 0;
-  font-size: 1.125rem;
-  color: var(--text-primary);
+  font-size: 18px;
 }
 
-.email {
-  color: var(--text-secondary);
-  font-size: 0.875rem;
-  margin: 0.25rem 0;
+.profile-info .email {
+  color: #666;
+  font-size: 14px;
 }
 
-.profile-meta {
-  display: flex;
-  gap: 1rem;
-  margin-top: 0.5rem;
-  font-size: 0.75rem;
-  color: var(--text-secondary);
-}
-
-.profile-meta span {
-  display: flex;
-  align-items: center;
-  gap: 0.25rem;
-}
-
-.profile-actions {
-  display: flex;
-  gap: 0.5rem;
-  position: absolute;
-  top: 1rem;
-  right: 1rem;
-  opacity: 0;
-  transition: opacity 0.2s ease;
-}
-
-.profile-card:hover .profile-actions {
-  opacity: 1;
-}
-
-.edit-btn, .delete-btn {
-  padding: 0.5rem;
-  border-radius: 0.375rem;
+.edit-button {
+  margin-top: 8px;
+  padding: 8px 12px;
+  background-color: #007bff;
+  color: white;
   border: none;
+  border-radius: 4px;
   cursor: pointer;
-  transition: all 0.2s ease;
+  font-size: 14px;
 }
 
-.edit-btn {
-  background-color: var(--primary-color);
-  color: white;
-}
-
-.delete-btn {
-  background-color: var(--danger-color);
-  color: white;
-}
-
-.edit-btn:hover, .delete-btn:hover {
-  transform: translateY(-1px);
-}
-
-@media (max-width: 768px) {
-  .profiles-grid {
-    grid-template-columns: 1fr;
-  }
-  
-  .profile-actions {
-    opacity: 1;
-  }
+.edit-button:hover {
+  background-color: #0056b3;
 }
 </style>
