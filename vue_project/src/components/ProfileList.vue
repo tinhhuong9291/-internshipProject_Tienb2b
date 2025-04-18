@@ -15,6 +15,9 @@
           <button @click="$emit('select-profile', profile)" class="edit-button">
             Edit
           </button>
+          <button @click="$emit('delete-profile', index)" class="delete-button">
+            Delete
+          </button>
         </div>
       </div>
     </div>
@@ -79,18 +82,31 @@ export default {
   font-size: 14px;
 }
 
-.edit-button {
+.edit-button,
+.delete-button {
   margin-top: 8px;
   padding: 8px 12px;
-  background-color: #007bff;
-  color: white;
   border: none;
   border-radius: 4px;
   cursor: pointer;
   font-size: 14px;
 }
 
+.edit-button {
+  background-color: #007bff;
+  color: white;
+}
+
 .edit-button:hover {
   background-color: #0056b3;
+}
+
+.delete-button {
+  background-color: #f44336;
+  color: white;
+}
+
+.delete-button:hover {
+  background-color: #d32f2f;
 }
 </style>

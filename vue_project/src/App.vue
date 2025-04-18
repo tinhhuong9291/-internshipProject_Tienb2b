@@ -15,7 +15,7 @@ export default {
       searchQuery: "",
       isLoading: false,
       errorMessage: "",
-      selectedProfile: null, // Profile được chọn để edit
+      selectedProfile: null,
     };
   },
   computed: {
@@ -89,16 +89,16 @@ export default {
       this.searchQuery = event.target.value;
     },
     handleSelectProfile(profile) {
-      this.selectedProfile = profile; // Gán profile được chọn
+      this.selectedProfile = profile;
     },
     updateProfile(updatedProfile) {
       const index = this.profiles.findIndex(
         (profile) => profile._id === updatedProfile._id
       );
       if (index !== -1) {
-        this.profiles.splice(index, 1, updatedProfile); // Cập nhật profile trong danh sách
+        this.profiles.splice(index, 1, updatedProfile);
       }
-      this.selectedProfile = null; // Đóng giao diện chỉnh sửa
+      this.selectedProfile = null;
     },
   },
   mounted() {
@@ -112,7 +112,6 @@ export default {
     <header>
       <h1>Customer Management</h1>
       <label for="searchQuery">Search Profiles:</label>
-      <!-- Thêm label -->
       <input
         type="text"
         id="searchQuery"
@@ -145,7 +144,7 @@ export default {
     </div>
   </div>
 </template>
-
+<!-- 
 <style scoped>
 #app {
   font-family: Arial, sans-serif;
@@ -176,4 +175,4 @@ header input {
   color: red;
   font-weight: bold;
 }
-</style>
+</style> -->
