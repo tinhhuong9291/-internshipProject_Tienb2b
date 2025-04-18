@@ -6,6 +6,8 @@ export default {
   components: {
     AddProfile,
     ProfileList,
+    EditProfile: () => import("./components/EditProfile.vue"),
+    DeleteProfile: () => import("./components/DeleteProfile.vue"),
   },
   data() {
     return {
@@ -61,6 +63,29 @@ export default {
       } catch (error) {
         this.errorMessage = "Failed to add profile. Please try again.";
         console.error("Error adding profile:", error);
+      }
+    },
+    //Edit profile method
+    async editProfile(index) {
+      const profile = this.profiles[index];
+      this.errorMessage = "";
+      try {
+        const response = await fetch(
+          `http://localhost:8080/api/customers/${profile._id}`,
+          {
+            method: "PUT",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify(profile),
+          }
+        );
+        if (!response.ok) {
+          throw new Error(`Error: ${response.statusText}`);
+        }
+      } catch (error) {
+        this.errorMessage = "Failed to edit profile. Please try again.";
+        console.error("Error editing profile:", error);
       }
     },
     async deleteProfile(index) {

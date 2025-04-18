@@ -17,9 +17,8 @@ app.use(cors());
 app.use(bodyParser.json());
 
 // Connect to MongoDB
-const MONGODB_URI =
-  process.env.MONGODB_URI ||
-  "mongodb+srv://<db_username>:<db_password>@cluster0.8mdyaai.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0";
+const MONGODB_URI = process.env.MONGODB_URI;
+
 mongoose
   .connect(MONGODB_URI)
   .then(() => console.log("Connected to MongoDB"))
