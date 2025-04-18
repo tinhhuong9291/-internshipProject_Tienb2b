@@ -38,7 +38,6 @@ A full-stack personal CRM system to manage your customers, clients, partners, or
 
 ## ⚙️ Project Structure
 
-\`\`\`
 personal-crm/
 ├── backend/
 │ ├── models/
@@ -53,7 +52,6 @@ personal-crm/
 │ │ ├── views/
 │ │ └── App.vue
 │ └── vite.config.js
-\`\`\`
 
 ---
 
