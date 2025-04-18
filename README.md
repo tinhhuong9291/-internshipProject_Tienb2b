@@ -129,6 +129,3 @@ Use Postman or Swagger to test. Ensure MongoDB is connected and the backend is r
 
 Made with 💙 by [ThanhTien](https://github.com/tinhhuong9291)
 `;
-
-fs.writeFileSync('README.md', content.trim(), 'utf8');
-console.log('✅ README.md created successfully!');
