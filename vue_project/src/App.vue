@@ -144,35 +144,3 @@ export default {
     </div>
   </div>
 </template>
-<!-- 
-<style scoped>
-#app {
-  font-family: Arial, sans-serif;
-  margin: 0 auto;
-  max-width: 800px;
-  padding: 20px;
-}
-
-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 20px;
-}
-
-header input {
-  padding: 8px;
-  font-size: 16px;
-  width: 300px;
-}
-
-.loading {
-  color: blue;
-  font-weight: bold;
-}
-
-.error {
-  color: red;
-  font-weight: bold;
-}
-</style> -->
