@@ -15,6 +15,6 @@ const CustomerSchema = new mongoose.Schema(
     notes: String,
   },
   { timestamps: true }
-); // tự động thêm createdAt và updatedAt
+); // Add timestamps to the schema
 
 module.exports = mongoose.model("Customer", CustomerSchema);

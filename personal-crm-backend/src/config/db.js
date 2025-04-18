@@ -6,7 +6,7 @@ dotenv.config();
 const connectDB = async () => {
   try {
     await mongoose.connect(process.env.MONGODB_URI, {
-      dbName: "myVirtualDatabase", // Tùy chọn: đặt tên database
+      dbName: "myVirtualDatabase",
     });
     console.log("MongoDB Connected!");
   } catch (err) {
