@@ -1,0 +1,17 @@
+# Exported from Render on 2025-04-18T16:06:12Z
+services:
+- type: web
+  name: internshipProject_Tienb2b
+  runtime: node
+  repo: https://github.com/tinhhuong9291/-internshipProject_Tienb2b
+  branch: back_end
+  plan: free
+  envVars:
+  - key: PORT
+    sync: false
+  - key: MONGODB_URI
+    sync: false
+  region: singapore
+  buildCommand: yarn
+  startCommand: yarn start dev
+version: "1"
