@@ -34,7 +34,10 @@ export default {
       this.isLoading = true;
       this.errorMessage = "";
       try {
-        const response = await fetch("http://localhost:8080/api/customers");
+        // const response = await fetch("http://localhost:8080/api/customers");
+        const response = await fetch(
+          "https://internshipproject-tienb2b.onrender.com/api/customers"
+        );
         if (!response.ok) {
           throw new Error(`Error: ${response.statusText}`);
         }
@@ -49,13 +52,18 @@ export default {
     async addProfile(profile) {
       this.errorMessage = "";
       try {
-        const response = await fetch("http://localhost:8080/api/customers", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(profile),
-        });
+        // const response = await fetch("http://localhost:8080/api/customers",
+        const response = await fetch(
+          "https://internshipproject-tienb2b.onrender.com/api/customers",
+
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify(profile),
+          }
+        );
         if (!response.ok) {
           throw new Error(`Error: ${response.statusText}`);
         }
@@ -71,7 +79,14 @@ export default {
       this.errorMessage = "";
       try {
         const response = await fetch(
-          `http://localhost:8080/api/customers/${profile._id}`,
+          // `http://localhost:8080/api/customers/${profile._id}`,
+          `https://internshipproject-tienb2b.onrender.com/api/customers/${profile._id}`,
+          {
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify(profile),
+          },
           {
             method: "DELETE",
           }
