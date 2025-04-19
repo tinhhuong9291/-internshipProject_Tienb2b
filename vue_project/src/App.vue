@@ -16,6 +16,7 @@ export default {
       isLoading: false,
       errorMessage: "",
       selectedProfile: null,
+      showAddForm: false,
     };
   },
   computed: {
@@ -54,9 +55,7 @@ export default {
       this.errorMessage = "";
       try {
         const response = await fetch(
-          // `${import.meta.env.VITE_API_URL}/customers`,
-          " https://internshipproject-tienb2b.onrender.com/api/customers " ||
-            "http://localhost:8080/api/customers",
+          "https://internshipproject-tienb2b.onrender.com/api/customers",
           {
             method: "POST",
             headers: {
@@ -70,6 +69,7 @@ export default {
         }
         const newProfile = await response.json();
         this.profiles.push(newProfile);
+        this.showAddForm = false;
       } catch (error) {
         this.errorMessage = "Failed to add profile. Please try again.";
         console.error("Error adding profile:", error);
@@ -114,6 +114,9 @@ export default {
       }
       this.selectedProfile = null;
     },
+    toggleAddForm() {
+      this.showAddForm = !this.showAddForm;
+    },
   },
   mounted() {
     this.fetchProfiles();
@@ -124,25 +127,41 @@ export default {
 <template>
   <div id="app">
     <header>
-      <h1>Customer Management</h1>
-      <label for="searchQuery">Search Profiles:</label>
-      <input
-        type="text"
-        id="searchQuery"
-        name="searchQuery"
-        v-model="searchQuery"
-        placeholder="Search profiles..."
-        autocomplete="off"
-        @keyup.enter="handleSearchInput"
-      />
+      <div class="header-content">
+        <h1>Customer Management</h1>
+        <div class="header-actions">
+          <div class="search-container">
+            <label for="searchQuery">Search Profiles:</label>
+            <input
+              type="text"
+              id="searchQuery"
+              name="searchQuery"
+              v-model="searchQuery"
+              placeholder="Search profiles..."
+              autocomplete="off"
+              @keyup.enter="handleSearchInput"
+            />
+          </div>
+          <button class="add-customer-btn" @click="toggleAddForm">
+            <i class="fas fa-plus"></i> Add New Customer
+          </button>
+        </div>
+      </div>
     </header>
     <main>
-      <AddProfile @add-profile="addProfile" />
+      <AddProfile 
+        v-if="showAddForm" 
+        @add-profile="addProfile"
+        @cancel="toggleAddForm"
+      />
+      
       <ProfileList
+        v-if="!showAddForm"
         :profiles="filteredProfiles"
         @delete-profile="deleteProfile"
         @select-profile="handleSelectProfile"
       />
+      
       <div v-if="isLoading" class="loading">Loading profiles...</div>
       <div v-if="errorMessage" class="error">{{ errorMessage }}</div>
     </main>
@@ -153,8 +172,51 @@ export default {
       @profile-updated="updateProfile"
       @close="selectedProfile = null"
     />
-    <div v-if="!filteredProfiles.length && !isLoading && !errorMessage">
+    <div v-if="!filteredProfiles.length && !isLoading && !errorMessage && !showAddForm">
       <p>No profiles found.</p>
     </div>
   </div>
 </template>
+
+<style scoped>
+.header-content {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  margin-bottom: 2rem;
+}
+
+.header-actions {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1rem;
+}
+
+.search-container {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  flex: 1;
+}
+
+.add-customer-btn {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.75rem 1.5rem;
+  background-color: var(--primary-color);
+  color: white;
+  border: none;
+  border-radius: 0.5rem;
+  font-size: 0.875rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.add-customer-btn:hover {
+  background-color: var(--primary-hover);
+  transform: translateY(-1px);
+}
+</style>
