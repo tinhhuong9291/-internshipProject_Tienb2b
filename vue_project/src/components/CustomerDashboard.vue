@@ -49,10 +49,7 @@ export default {
   methods: {
     async fetchCustomers() {
       try {
-        // const res = await fetch('http://localhost:8080/api/customers');
-        const res = await fetch(
-          "https://internshipproject-tienb2b.onrender.com/api/customers"
-        );
+        const res = await fetch(`${import.meta.env.VITE_API_URL}/customers`);
         if (!res.ok) {
           throw new Error(`Error: ${res.statusText}`);
         }
@@ -74,16 +71,12 @@ export default {
       if (!confirm("Are you sure to delete this customer?")) return;
       try {
         await fetch(
-          // `http://localhost:8080/api/customers/${this.selectedCustomer._id}`,
-          `https://internshipproject-tienb2b.onrender.com/api/customers/${this.selectedCustomer._id}`,
+          `${import.meta.env.VITE_API_URL}/customers/${this.selectedCustomer._id}`,
           {
+            method: "DELETE",
             headers: {
               "Content-Type": "application/json",
             },
-            body: JSON.stringify(this.selectedCustomer),
-          },
-          {
-            method: "DELETE",
           }
         );
         this.customers = this.customers.filter(

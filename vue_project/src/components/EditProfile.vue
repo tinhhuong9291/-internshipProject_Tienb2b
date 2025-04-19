@@ -64,8 +64,7 @@ export default {
     async saveChanges() {
       try {
         const response = await fetch(
-          // `http://localhost:8080/api/customers/${this.editableProfile._id}`,
-          `https://internshipproject-tienb2b.onrender.com/api/customers/${this.editableProfile._id}`,
+          `${import.meta.env.VITE_API_URL}/customers/${this.editableProfile._id}`,
           {
             method: "PUT",
             headers: {
