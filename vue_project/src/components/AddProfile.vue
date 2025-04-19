@@ -1,8 +1,8 @@
 <template>
   <div class="add-profile">
     <div class="form-card">
-      <h2>Add New Profile</h2>
-      <form @submit.prevent="addProfile">
+      <h2>Add New Customer</h2>
+      <form @submit.prevent="submitForm">
         <div class="form-group">
           <label for="name">Full Name</label>
           <input
@@ -36,10 +36,15 @@
           />
         </div>
 
-        <button type="submit" class="submit-btn">
-          <i class="fas fa-plus"></i>
-          Add Profile
-        </button>
+        <div class="form-actions">
+          <button type="button" class="cancel-btn" @click="cancelForm">
+            Cancel
+          </button>
+          <button type="submit" class="submit-btn">
+            <i class="fas fa-save"></i>
+            Save Customer
+          </button>
+        </div>
       </form>
     </div>
   </div>
@@ -57,9 +62,20 @@ export default {
     };
   },
   methods: {
-    addProfile() {
+    submitForm() {
       this.$emit("add-profile", { ...this.profile });
-      this.profile = { name: "", email: "", phone: "" };
+      this.resetForm();
+    },
+    cancelForm() {
+      this.resetForm();
+      this.$emit("cancel");
+    },
+    resetForm() {
+      this.profile = {
+        name: "",
+        email: "",
+        phone: "",
+      };
     },
   },
 };
@@ -125,14 +141,16 @@ input::placeholder {
   opacity: 0.7;
 }
 
-.submit-btn {
-  margin-top: 1rem;
+.form-actions {
   display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 0.5rem;
+  justify-content: flex-end;
+  gap: 1rem;
+  margin-top: 1.5rem;
+}
+
+.cancel-btn {
   padding: 0.75rem 1.5rem;
-  background-color: var(--primary-color);
+  background-color: var(--secondary-color);
   color: white;
   border: none;
   border-radius: 0.5rem;
@@ -142,13 +160,29 @@ input::placeholder {
   transition: all 0.2s ease;
 }
 
-.submit-btn:hover {
-  background-color: var(--primary-hover);
+.cancel-btn:hover {
+  opacity: 0.9;
   transform: translateY(-1px);
 }
 
-.submit-btn i {
+.submit-btn {
+  padding: 0.75rem 1.5rem;
+  background-color: var(--primary-color);
+  color: white;
+  border: none;
+  border-radius: 0.5rem;
   font-size: 0.875rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.submit-btn:hover {
+  background-color: var(--primary-hover);
+  transform: translateY(-1px);
 }
 
 @media (max-width: 768px) {
