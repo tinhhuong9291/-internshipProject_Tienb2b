@@ -34,7 +34,11 @@ export default {
       this.isLoading = true;
       this.errorMessage = "";
       try {
-        const response = await fetch(`${import.meta.env.VITE_API_URL}/customers`);
+        // const response = await fetch(`${import.meta.env.VITE_API_URL}/customers`);
+        const response = await fetch(
+          " https://internshipproject-tienb2b.onrender.com/api " ||
+            "http://localhost:8080/api"
+        );
         if (!response.ok) {
           throw new Error(`Error: ${response.statusText}`);
         }
@@ -49,13 +53,18 @@ export default {
     async addProfile(profile) {
       this.errorMessage = "";
       try {
-        const response = await fetch(`${import.meta.env.VITE_API_URL}/customers`, {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(profile),
-        });
+        const response = await fetch(
+          // `${import.meta.env.VITE_API_URL}/customers`,
+          " https://internshipproject-tienb2b.onrender.com/api " ||
+            "http://localhost:8080/api",
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify(profile),
+          }
+        );
         if (!response.ok) {
           throw new Error(`Error: ${response.statusText}`);
         }
@@ -71,7 +80,9 @@ export default {
       this.errorMessage = "";
       try {
         const response = await fetch(
-          `${import.meta.env.VITE_API_URL}/customers/${profile._id}`,
+          // `${import.meta.env.VITE_API_URL}/customers/${profile._id}`,
+          `https://internshipproject-tienb2b.onrender.com/api/${profile._id}` ||
+            `http://localhost:8080/api/${profile._id}`,
           {
             method: "DELETE",
             headers: {
