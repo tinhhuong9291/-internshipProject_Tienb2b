@@ -27,7 +27,18 @@ router.post('/customers',
       res.status(201).json({ message: 'Khách hàng được tạo!' });
     }
   );
-//
+// validate name length
+router.post('/customers',
+    body('name').isLength({ min: 3, max: 50 }).withMessage('Tên phải có 3-50 ký tự'),
+    (req, res) => {
+      const errors = validationResult(req);
+      if (!errors.isEmpty()) {
+        return res.status(400).json({ errors: errors.array() });
+      }
+      res.status(201).json({ message: 'Khách hàng được tạo!' });
+    }
+  );
+
 
 // validate email
 router.post('/customers',
