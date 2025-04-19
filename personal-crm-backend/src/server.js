@@ -12,7 +12,16 @@ app.use(express.static(path.join(__dirname, "../vue_project/dist")));
 // Middleware
 
 // // Middleware
-app.use(cors());
+app.use(
+  cors({
+    origin: [
+      "http://localhost:3001",
+      "http://localhost:3000",
+      "https://internshipproject-tienb2b.onrender.com",
+    ],
+    credentials: true,
+  })
+);
 app.use(bodyParser.json());
 
 // Connect to MongoDB
@@ -24,6 +33,7 @@ mongoose
   .catch((err) => console.error("Could not connect to MongoDB:", err));
 
 // Import routes
+
 app.use("/api/customers", require("./routes/customerRoutes"));
 app.use("/api/interactions", require("./routes/interactionRoutes"));
 app.use("/api/tasks", require("./routes/taskRoutes"));

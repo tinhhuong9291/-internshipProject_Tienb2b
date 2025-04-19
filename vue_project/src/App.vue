@@ -37,7 +37,7 @@ export default {
       try {
         // const response = await fetch(`${import.meta.env.VITE_API_URL}/customers`);
         const response = await fetch(
-          " https://internshipproject-tienb2b.onrender.com/api/customers " ||
+          "https://internshipproject-tienb2b.onrender.com/api/customers" ||
             "http://localhost:8080/api/customers"
         );
         if (!response.ok) {
@@ -56,6 +56,7 @@ export default {
       try {
         const response = await fetch(
           "https://internshipproject-tienb2b.onrender.com/api/customers",
+          "http://localhost:8080/api/customers/",
           {
             method: "POST",
             headers: {
@@ -149,19 +150,19 @@ export default {
       </div>
     </header>
     <main>
-      <AddProfile 
-        v-if="showAddForm" 
+      <AddProfile
+        v-if="showAddForm"
         @add-profile="addProfile"
         @cancel="toggleAddForm"
       />
-      
+
       <ProfileList
         v-if="!showAddForm"
         :profiles="filteredProfiles"
         @delete-profile="deleteProfile"
         @select-profile="handleSelectProfile"
       />
-      
+
       <div v-if="isLoading" class="loading">Loading profiles...</div>
       <div v-if="errorMessage" class="error">{{ errorMessage }}</div>
     </main>
@@ -172,7 +173,11 @@ export default {
       @profile-updated="updateProfile"
       @close="selectedProfile = null"
     />
-    <div v-if="!filteredProfiles.length && !isLoading && !errorMessage && !showAddForm">
+    <div
+      v-if="
+        !filteredProfiles.length && !isLoading && !errorMessage && !showAddForm
+      "
+    >
       <p>No profiles found.</p>
     </div>
   </div>
