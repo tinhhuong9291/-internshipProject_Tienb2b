@@ -37,8 +37,9 @@ export default {
       try {
         // const response = await fetch(`${import.meta.env.VITE_API_URL}/customers`);
         const response = await fetch(
-          "https://internshipproject-tienb2b.onrender.com/api/customers" ||
-            "http://localhost:8080/api/customers"
+          "https://internshipproject-tienb2b.onrender.com/api/customers"
+          // ||
+          // "http://localhost:8080/api/customers"
         );
         if (!response.ok) {
           throw new Error(`Error: ${response.statusText}`);
@@ -56,7 +57,7 @@ export default {
       try {
         const response = await fetch(
           "https://internshipproject-tienb2b.onrender.com/api/customers",
-          "http://localhost:8080/api/customers/",
+          // "http://localhost:8080/api/customers/",
           {
             method: "POST",
             headers: {
@@ -65,9 +66,19 @@ export default {
             body: JSON.stringify(profile),
           }
         );
+
         if (!response.ok) {
-          throw new Error(`Error: ${response.statusText}`);
+          if (Array.isArray(result.errors)) {
+            result.errors.forEach((error) => {
+              this.formErrors[error.param] = error.msg;
+            });
+            this.errorMessage = "Vui lòng kiểm tra lại các trường bên dưới.";
+          } else {
+            this.errorMessage = result.message || "Failed to add profile.";
+          }
+          return;
         }
+
         const newProfile = await response.json();
         this.profiles.push(newProfile);
         this.showAddForm = false;
@@ -82,9 +93,8 @@ export default {
       try {
         const response = await fetch(
           // `${import.meta.env.VITE_API_URL}/customers/${profile._id}`,
-          `https://internshipproject-tienb2b.onrender.com/api/customers/${profile._id}` ||
-            `http://localhost:8080/api/customers/${profile._id}`,
-          {
+          `https://internshipproject-tienb2b.onrender.com/api/customers/${profile._id}` || {
+            // `http://localhost:8080/api/customers/${profile._id}`,
             method: "DELETE",
             headers: {
               "Content-Type": "application/json",

@@ -37,6 +37,10 @@ exports.createCustomer = async (req, res) => {
       .status(201)
       .json({ message: "Tạo khách hàng thành công", customer: newCustomer });
   } catch (err) {
+    if (err.name === "ValidationError") {
+      const errors = Object.values(err.errors).map((e) => e.message);
+      return res.status(400).json({ errors });
+    }
     res.status(500).json({ message: "Lỗi khi tạo khách hàng", error: err });
   }
 };

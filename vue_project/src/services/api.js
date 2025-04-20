@@ -4,9 +4,8 @@ import axios from "axios";
 // const API_BASE = axios.create({
 //   baseURL: import.meta.env.VITE_API_URL,
 // });
-const API_BASE =
-  " https://internshipproject-tienb2b.onrender.com/api " ||
-  "http://localhost:8080/api";
+const API_BASE = " https://internshipproject-tienb2b.onrender.com/api ";
+// ||"http://localhost:8080/api";
 
 export const api = {
   customers: {
