@@ -12,16 +12,32 @@ app.use(express.static(path.join(__dirname, "../vue_project/dist")));
 // Middleware
 
 // // Middleware
+const allowedOrigins = [
+  "http://localhost:3000",
+  "https://internship-project-tienb2b-mnkw4j2gy.vercel.app",
+];
+
 app.use(
   cors({
-    origin: [
-      "http://localhost:3001",
-      "http://localhost:3000",
-      "https://internshipproject-tienb2b.onrender.com",
-    ],
-    credentials: true,
+    origin: function (origin, callback) {
+      if (!origin || allowedOrigins.includes(origin)) {
+        callback(null, true);
+      } else {
+        callback(new Error("Not allowed by CORS"));
+      }
+    },
   })
 );
+// app.use(
+//   cors({
+//     origin: [
+//       "http://localhost:3001",
+//       "http://localhost:3000",
+//       "https://internship-project-tienb2b-mnkw4j2gy.vercel.app",
+//     ],
+//     credentials: true,
+//   })
+// );
 app.use(bodyParser.json());
 
 // Connect to MongoDB

@@ -8,7 +8,27 @@ const app = express();
 
 // Middleware
 const cors = require("cors");
-app.use(cors());
+// app.use(
+//   cors({
+//     origin: "https://internship-project-tienb2b-mnkw4j2gy.vercel.app",
+//   })
+// );
+const allowedOrigins = [
+  "http://localhost:3000",
+  "https://internship-project-tienb2b-mnkw4j2gy.vercel.app",
+];
+
+app.use(
+  cors({
+    origin: function (origin, callback) {
+      if (!origin || allowedOrigins.includes(origin)) {
+        callback(null, true);
+      } else {
+        callback(new Error("Not allowed by CORS"));
+      }
+    },
+  })
+);
 
 // Connect to MongoDB
 const MONGODB_URI = process.env.MONGODB_URI;
