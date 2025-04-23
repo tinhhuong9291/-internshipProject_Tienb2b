@@ -17,6 +17,7 @@ export default {
       errorMessage: "",
       selectedProfile: null,
       showAddForm: false,
+      successMessage: "",
     };
   },
   computed: {
@@ -35,7 +36,6 @@ export default {
       this.isLoading = true;
       this.errorMessage = "";
       try {
-        // const response = await fetch(`${import.meta.env.VITE_API_URL}/customers`);
         const response = await fetch(
           "https://internshipproject-tienb2b.onrender.com/api/customers"
           // ||
@@ -44,28 +44,37 @@ export default {
         if (!response.ok) {
           throw new Error(`Error: ${response.statusText}`);
         }
-        this.profiles = await response.json();
+        const data = await response.json();
+
+        if (Array.isArray(data)) {
+          this.profiles = data;
+        } else {
+          throw new Error("Unexpected response format");
+        }
       } catch (error) {
         this.errorMessage = "Failed to fetch profiles. Please try again later.";
-        console.error("Error fetching profiles:", error);
+        console.error("Error fetching profiles:", error.message || error);
       } finally {
         this.isLoading = false;
       }
     },
     async addProfile(profile) {
       this.errorMessage = "";
+      this.formErrors = {};
+
       try {
-        const response = await fetch(
-          "https://internshipproject-tienb2b.onrender.com/api/customers",
-          // "http://localhost:8080/api/customers/",
-          {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-            },
-            body: JSON.stringify(profile),
-          }
-        );
+        const apiUrl =
+          "https://internshipproject-tienb2b.onrender.com/api/customers/";
+
+        const response = await fetch(`${apiUrl}/api/customers`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(profile),
+        });
+
+        const result = await response.json();
 
         if (!response.ok) {
           if (Array.isArray(result.errors)) {
@@ -74,27 +83,32 @@ export default {
             });
             this.errorMessage = "Vui lòng kiểm tra lại các trường bên dưới.";
           } else {
-            this.errorMessage = result.message || "Failed to add profile.";
+            this.errorMessage = result.message || "Không thể thêm profile.";
           }
           return;
         }
 
-        const newProfile = await response.json();
-        this.profiles.push(newProfile);
+        // Cập nhật lại danh sách từ server để đảm bảo đồng bộ
+        await this.fetchProfiles();
         this.showAddForm = false;
+
+        this.successMessage = "Thêm khách hàng thành công!";
+        setTimeout(() => {
+          this.successMessage = "";
+        }, 3000);
       } catch (error) {
-        this.errorMessage = "Failed to add profile. Please try again.";
+        this.errorMessage = "Lỗi khi thêm profile. Vui lòng thử lại.";
         console.error("Error adding profile:", error);
       }
     },
+
     async deleteProfile(index) {
       const profile = this.profiles[index];
       this.errorMessage = "";
       try {
         const response = await fetch(
-          // `${import.meta.env.VITE_API_URL}/customers/${profile._id}`,
-          `https://internshipproject-tienb2b.onrender.com/api/customers/${profile._id}` || {
-            // `http://localhost:8080/api/customers/${profile._id}`,
+          `https://internshipproject-tienb2b.onrender.com/api/customers/${profile._id}`,
+          {
             method: "DELETE",
             headers: {
               "Content-Type": "application/json",
@@ -110,20 +124,70 @@ export default {
         console.error("Error deleting profile:", error);
       }
     },
+    // update Profile
+    async updateProfile(updatedProfile) {
+      this.errorMessage = "";
+      this.formErrors = {};
+
+      if (!updatedProfile || !updatedProfile._id) {
+        console.error("Không có _id trong updatedProfile:", updatedProfile);
+        this.errorMessage = "Không thể cập nhật vì thiếu ID hồ sơ.";
+        return;
+      }
+
+      try {
+        const apiUrl = "https://internshipproject-tienb2b.onrender.com";
+        const response = await fetch(
+          `${apiUrl}/api/customers/${updatedProfile._id}`,
+          {
+            method: "PUT",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify(updatedProfile),
+          }
+        );
+
+        const result = await response.json();
+
+        if (!response.ok) {
+          if (Array.isArray(result.errors)) {
+            result.errors.forEach((error) => {
+              this.formErrors[error.param] = error.msg;
+            });
+            this.errorMessage = "Vui lòng kiểm tra lại các trường.";
+          } else {
+            this.errorMessage =
+              result.message || "Không thể cập nhật thông tin.";
+          }
+          return;
+        }
+
+        // Sau khi cập nhật thành công, đồng bộ lại danh sách từ server
+        await this.fetchProfiles();
+
+        this.selectedProfile = null;
+        this.successMessage = "Cập nhật thành công!";
+        setTimeout(() => {
+          this.successMessage = "";
+        }, 3000);
+      } catch (error) {
+        console.error("Error updating profile:", error);
+        this.errorMessage = "Lỗi khi cập nhật. Vui lòng thử lại.";
+      }
+    },
+
     handleSearchInput(event) {
       this.searchQuery = event.target.value;
     },
     handleSelectProfile(profile) {
-      this.selectedProfile = profile;
-    },
-    updateProfile(updatedProfile) {
-      const index = this.profiles.findIndex(
-        (profile) => profile._id === updatedProfile._id
-      );
-      if (index !== -1) {
-        this.profiles.splice(index, 1, updatedProfile);
+      if (profile && profile._id) {
+        this.selectedProfile = { ...profile };
+      } else {
+        console.error("Profile missing ID:", profile);
+        this.errorMessage =
+          "Không thể chỉnh sửa hồ sơ này vì thiếu thông tin ID";
       }
-      this.selectedProfile = null;
     },
     toggleAddForm() {
       this.showAddForm = !this.showAddForm;

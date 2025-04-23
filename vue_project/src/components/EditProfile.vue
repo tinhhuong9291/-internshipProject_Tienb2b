@@ -2,20 +2,24 @@
   <div class="edit-profile-overlay">
     <div class="edit-profile-popup">
       <div class="popup-header">
-        <h2>Edit Customer Information</h2>
+        <h2>Chỉnh sửa thông tin khách hàng</h2>
         <button class="close-btn" @click="$emit('close')">&times;</button>
       </div>
 
       <form @submit.prevent="saveChanges">
         <div class="form-group">
-          <label for="name">Name:</label>
+          <label for="name">Họ tên:</label>
           <input
             id="name"
             v-model="editableProfile.name"
             type="text"
-            placeholder="Enter name"
+            placeholder="Nhập họ tên"
             required
+            :class="{ error: formErrors.name }"
           />
+          <span class="error-message" v-if="formErrors.name">{{
+            formErrors.name
+          }}</span>
         </div>
 
         <div class="form-group">
@@ -24,27 +28,44 @@
             id="email"
             v-model="editableProfile.email"
             type="email"
-            placeholder="Enter email"
+            placeholder="Nhập email"
             required
+            :class="{ error: formErrors.email }"
           />
+          <span class="error-message" v-if="formErrors.email">{{
+            formErrors.email
+          }}</span>
         </div>
 
         <div class="form-group">
-          <label for="phone">Phone:</label>
+          <label for="phone">Số điện thoại:</label>
           <input
             id="phone"
             v-model="editableProfile.phone"
             type="tel"
-            placeholder="Enter phone number"
+            placeholder="Nhập số điện thoại"
+            required
+            :class="{ error: formErrors.phone }"
           />
+          <span class="error-message" v-if="formErrors.phone">{{
+            formErrors.phone
+          }}</span>
+        </div>
+
+        <div v-if="errorMessage" class="error-message general-error">
+          {{ errorMessage }}
         </div>
 
         <div class="form-actions">
           <button type="button" class="btn btn-cancel" @click="$emit('close')">
-            Cancel
+            Hủy
           </button>
-          <button type="submit" class="btn btn-confirm">
-            Confirm
+          <button
+            type="submit"
+            class="btn btn-confirm"
+            :disabled="isSubmitting"
+          >
+            {{ isSubmitting ? "Đang lưu..." : "Xác nhận" }}
           </button>
         </div>
       </form>
@@ -57,19 +78,173 @@ export default {
   props: ["profile"],
   data() {
     return {
-      editableProfile: {},
+      editableProfile: null,
+      formErrors: {
+        name: "",
+        email: "",
+        phone: "",
+      },
+      errorMessage: "",
+      isSubmitting: false,
     };
   },
+  // watch: {
+  //   profile: {
+  //     handler(newVal) {
+  //       if (newVal && newVal._id) {
+  //         this.editableProfile = { ...newVal };
+  //         this.resetErrors();
+  //       }
+  //     },
+  //     immediate: true,
+  //   },
+  //   "editableProfile.name"() {
+  //     this.formErrors.name = "";
+  //     this.errorMessage = "";
+  //   },
+  //   "editableProfile.email"() {
+  //     this.formErrors.email = "";
+  //     this.errorMessage = "";
+  //   },
+  //   "editableProfile.phone"() {
+  //     this.formErrors.phone = "";
+  //     this.errorMessage = "";
+  //   },
+  // },
+
   watch: {
     profile: {
       handler(newVal) {
-        this.editableProfile = { ...newVal };
+        if (newVal && newVal._id) {
+          this.editableProfile = { ...newVal }; // Sao chép toàn bộ profile, bao gồm cả _id
+          this.resetErrors();
+        }
       },
       immediate: true,
     },
   },
+
   methods: {
+    resetErrors() {
+      this.formErrors = {
+        name: "",
+        email: "",
+        phone: "",
+      };
+      this.errorMessage = "";
+    },
+    validateForm() {
+      let isValid = true;
+      this.resetErrors();
+
+      // Kiểm tra tên (chỉ chữ cái và khoảng trắng, 3-50 ký tự)
+      if (!this.editableProfile.name) {
+        this.formErrors.name = "Vui lòng nhập họ tên";
+        isValid = false;
+      } else if (!/^[A-Za-z\s]+$/.test(this.editableProfile.name)) {
+        this.formErrors.name = "Tên chỉ được chứa chữ";
+        isValid = false;
+      } else if (
+        this.editableProfile.name.length < 3 ||
+        this.editableProfile.name.length > 50
+      ) {
+        this.formErrors.name = "Tên phải có 3-50 ký tự";
+        isValid = false;
+      }
+
+      // Kiểm tra email
+      if (!this.editableProfile.email) {
+        this.formErrors.email = "Vui lòng nhập email";
+        isValid = false;
+      } else if (
+        !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(this.editableProfile.email)
+      ) {
+        this.formErrors.email = "Email không hợp lệ";
+        isValid = false;
+      }
+
+      // Kiểm tra số điện thoại (chỉ số, 10-11 số)
+      if (!this.editableProfile.phone) {
+        this.formErrors.phone = "Vui lòng nhập số điện thoại";
+        isValid = false;
+      } else if (!/^[0-9]+$/.test(this.editableProfile.phone)) {
+        this.formErrors.phone = "Số điện thoại chỉ được chứa số";
+        isValid = false;
+      } else if (
+        this.editableProfile.phone.length < 10 ||
+        this.editableProfile.phone.length > 11
+      ) {
+        this.formErrors.phone = "Số điện thoại phải có 10-11 số";
+        isValid = false;
+      }
+
+      return isValid;
+    },
+    // async saveChanges() {
+    //   if (!this.validateForm()) {
+    //     this.errorMessage = "Vui lòng kiểm tra lại các trường bên dưới";
+    //     return;
+    //   }
+
+    //   if (!this.editableProfile._id) {
+    //     this.errorMessage = "Không thể cập nhật vì thiếu ID hồ sơ";
+    //     return;
+    //   }
+
+    //   this.isSubmitting = true;
+    //   try {
+    //     const response = await fetch(
+    //       `https://internshipproject-tienb2b.onrender.com/api/customers/${this.editableProfile._id}`,
+    //       {
+    //         method: "PUT",
+    //         headers: {
+    //           "Content-Type": "application/json",
+    //         },
+    //         body: JSON.stringify({
+    //           ...this.editableProfile,
+    //           _id: this.editableProfile._id, // Explicitly include the ID
+    //         }),
+    //       }
+    //     );
+
+    //     const result = await response.json();
+
+    //     if (!response.ok) {
+    //       if (Array.isArray(result.errors)) {
+    //         result.errors.forEach((error) => {
+    //           this.formErrors[error.param] = error.msg;
+    //         });
+    //         this.errorMessage = "Vui lòng kiểm tra lại các trường bên dưới";
+    //       } else {
+    //         this.errorMessage =
+    //           result.message || "Không thể cập nhật thông tin";
+    //       }
+    //       return;
+    //     }
+
+    //     // Emit the updated profile data to parent
+    //     this.$emit("profile-updated", result);
+    //     this.$emit("close");
+    //   } catch (error) {
+    //     this.errorMessage = "Đã xảy ra lỗi khi lưu. Vui lòng thử lại.";
+    //     console.error("Error saving profile:", error);
+    //   } finally {
+    //     this.isSubmitting = false;
+    //   }
+    // },
+
     async saveChanges() {
+      if (!this.validateForm()) {
+        this.errorMessage = "Vui lòng kiểm tra lại các trường bên dưới";
+        return;
+      }
+
+      if (!this.editableProfile._id) {
+        this.errorMessage = "Không thể cập nhật vì thiếu ID hồ sơ";
+        return;
+      }
+
+      this.isSubmitting = true;
       try {
         const response = await fetch(
           `https://internshipproject-tienb2b.onrender.com/api/customers/${this.editableProfile._id}`,
@@ -78,17 +253,33 @@ export default {
             headers: {
               "Content-Type": "application/json",
             },
-            body: JSON.stringify(this.editableProfile),
+            body: JSON.stringify(this.editableProfile), // Bao gồm cả _id
           }
         );
+
+        const result = await response.json();
+
         if (!response.ok) {
-          throw new Error("Failed to update profile");
+          if (Array.isArray(result.errors)) {
+            result.errors.forEach((error) => {
+              this.formErrors[error.param] = error.msg;
+            });
+            this.errorMessage = "Vui lòng kiểm tra lại các trường bên dưới";
+          } else {
+            this.errorMessage =
+              result.message || "Không thể cập nhật thông tin";
+          }
+          return;
         }
-        const updatedProfile = await response.json();
-        this.$emit("profile-updated", updatedProfile);
+
+        // Emit the updated profile data to parent
+        this.$emit("profile-updated", this.editableProfile);
         this.$emit("close");
       } catch (error) {
+        this.errorMessage = "Đã xảy ra lỗi khi lưu. Vui lòng thử lại.";
         console.error("Error saving profile:", error);
+      } finally {
+        this.isSubmitting = false;
       }
     },
   },
@@ -96,115 +287,33 @@ export default {
 </script>
 
 <style scoped>
-.edit-profile-overlay {
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background-color: rgba(0, 0, 0, 0.5);
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  z-index: 1000;
-}
+/* Giữ nguyên các styles hiện có và thêm: */
 
-.edit-profile-popup {
-  background-color: white;
-  border-radius: 8px;
-  padding: 24px;
-  width: 90%;
-  max-width: 500px;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-  position: relative;
-}
-
-.popup-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 20px;
-}
-
-.popup-header h2 {
-  margin: 0;
-  font-size: 1.5rem;
-  color: var(--text-primary);
-}
-
-.close-btn {
-  background: none;
-  border: none;
-  font-size: 24px;
-  color: var(--text-secondary);
-  cursor: pointer;
-  padding: 0;
-  line-height: 1;
-}
-
-.close-btn:hover {
-  color: var(--text-primary);
-}
-
-.form-group {
-  margin-bottom: 16px;
-}
-
-.form-group label {
+.error-message {
+  color: #dc2626;
+  font-size: 0.875rem;
+  margin-top: 0.25rem;
   display: block;
-  margin-bottom: 8px;
-  font-weight: 500;
-  color: var(--text-primary);
 }
 
-.form-group input {
-  width: 100%;
-  padding: 8px 12px;
-  border: 1px solid var(--border-color);
-  border-radius: 4px;
-  font-size: 14px;
-  transition: all 0.2s ease;
+.general-error {
+  background-color: #fee2e2;
+  border: 1px solid #dc2626;
+  padding: 0.75rem;
+  border-radius: 0.375rem;
+  margin-bottom: 1rem;
 }
 
-.form-group input:focus {
-  border-color: var(--primary-color);
-  box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.1);
-  outline: none;
+input.error {
+  border-color: #dc2626;
 }
 
-.form-actions {
-  display: flex;
-  justify-content: flex-end;
-  gap: 12px;
-  margin-top: 24px;
+input.error:focus {
+  box-shadow: 0 0 0 3px rgba(220, 38, 38, 0.1);
 }
 
-.btn {
-  padding: 8px 16px;
-  border-radius: 4px;
-  font-size: 14px;
-  font-weight: 500;
-  cursor: pointer;
-  transition: all 0.2s ease;
-}
-
-.btn-cancel {
-  background-color: var(--secondary-color);
-  color: white;
-  border: none;
-}
-
-.btn-cancel:hover {
-  opacity: 0.9;
-}
-
-.btn-confirm {
-  background-color: var(--primary-color);
-  color: white;
-  border: none;
-}
-
-.btn-confirm:hover {
-  background-color: var(--primary-hover);
+.btn:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
 }
 </style>

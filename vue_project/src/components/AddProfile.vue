@@ -1,48 +1,58 @@
 <template>
   <div class="add-profile">
     <div class="form-card">
-      <h2>Add New Customer</h2>
+      <h2>Thêm khách hàng mới</h2>
       <form @submit.prevent="submitForm">
         <div class="form-group">
-          <label for="name">Full Name</label>
+          <label for="name">Họ tên</label>
           <input
             type="text"
             id="name"
             v-model="profile.name"
-            placeholder="Enter full name"
+            placeholder="Nhập họ tên"
             required
+            :class="{ 'error': formErrors.name }"
           />
+          <span class="error-message" v-if="formErrors.name">{{ formErrors.name }}</span>
         </div>
 
         <div class="form-group">
-          <label for="email">Email Address</label>
+          <label for="email">Email</label>
           <input
             type="email"
             id="email"
             v-model="profile.email"
-            placeholder="Enter email address"
+            placeholder="Nhập email"
             required
+            :class="{ 'error': formErrors.email }"
           />
+          <span class="error-message" v-if="formErrors.email">{{ formErrors.email }}</span>
         </div>
 
         <div class="form-group">
-          <label for="phone">Phone Number</label>
+          <label for="phone">Số điện thoại</label>
           <input
             type="tel"
             id="phone"
             v-model="profile.phone"
-            placeholder="Enter phone number"
+            placeholder="Nhập số điện thoại"
             required
+            :class="{ 'error': formErrors.phone }"
           />
+          <span class="error-message" v-if="formErrors.phone">{{ formErrors.phone }}</span>
+        </div>
+
+        <div v-if="errorMessage" class="error-message general-error">
+          {{ errorMessage }}
         </div>
 
         <div class="form-actions">
           <button type="button" class="cancel-btn" @click="cancelForm">
-            Cancel
+            Hủy
           </button>
-          <button type="submit" class="submit-btn">
+          <button type="submit" class="submit-btn" :disabled="isSubmitting">
             <i class="fas fa-save"></i>
-            Save Customer
+            {{ isSubmitting ? 'Đang lưu...' : 'Lưu' }}
           </button>
         </div>
       </form>
@@ -59,12 +69,93 @@ export default {
         email: "",
         phone: "",
       },
+      formErrors: {
+        name: '',
+        email: '',
+        phone: ''
+      },
+      errorMessage: '',
+      isSubmitting: false
     };
   },
+  watch: {
+    'profile.name'() {
+      this.formErrors.name = '';
+      this.errorMessage = '';
+    },
+    'profile.email'() {
+      this.formErrors.email = '';
+      this.errorMessage = '';
+    },
+    'profile.phone'() {
+      this.formErrors.phone = '';
+      this.errorMessage = '';
+    }
+  },
   methods: {
-    submitForm() {
-      this.$emit("add-profile", { ...this.profile });
-      this.resetForm();
+    validateForm() {
+      let isValid = true;
+      this.resetErrors();
+
+      // Kiểm tra tên (chỉ chữ cái và khoảng trắng, 3-50 ký tự)
+      if (!this.profile.name) {
+        this.formErrors.name = "Vui lòng nhập họ tên";
+        isValid = false;
+      } else if (!/^[A-Za-z\s]+$/.test(this.profile.name)) {
+        this.formErrors.name = "Tên chỉ được chứa chữ";
+        isValid = false;
+      } else if (this.profile.name.length < 3 || this.profile.name.length > 50) {
+        this.formErrors.name = "Tên phải có 3-50 ký tự";
+        isValid = false;
+      }
+
+      // Kiểm tra email
+      if (!this.profile.email) {
+        this.formErrors.email = "Vui lòng nhập email";
+        isValid = false;
+      } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(this.profile.email)) {
+        this.formErrors.email = "Email không hợp lệ";
+        isValid = false;
+      }
+
+      // Kiểm tra số điện thoại (chỉ số, 10-11 số)
+      if (!this.profile.phone) {
+        this.formErrors.phone = "Vui lòng nhập số điện thoại";
+        isValid = false;
+      } else if (!/^[0-9]+$/.test(this.profile.phone)) {
+        this.formErrors.phone = "Số điện thoại chỉ được chứa số";
+        isValid = false;
+      } else if (this.profile.phone.length < 10 || this.profile.phone.length > 11) {
+        this.formErrors.phone = "Số điện thoại phải có 10-11 số";
+        isValid = false;
+      }
+
+      return isValid;
+    },
+    resetErrors() {
+      this.formErrors = {
+        name: '',
+        email: '',
+        phone: ''
+      };
+      this.errorMessage = '';
+    },
+    async submitForm() {
+      if (!this.validateForm()) {
+        this.errorMessage = "Vui lòng kiểm tra lại các trường bên dưới";
+        return;
+      }
+
+      this.isSubmitting = true;
+      try {
+        this.$emit("add-profile", { ...this.profile });
+        this.resetForm();
+      } catch (error) {
+        this.errorMessage = "Đã xảy ra lỗi. Vui lòng thử lại.";
+        console.error("Error submitting form:", error);
+      } finally {
+        this.isSubmitting = false;
+      }
     },
     cancelForm() {
       this.resetForm();
@@ -76,119 +167,40 @@ export default {
         email: "",
         phone: "",
       };
+      this.resetErrors();
     },
   },
 };
 </script>
 
 <style scoped>
-.add-profile {
-  margin: 2rem 0;
-}
+/* Giữ các styles hiện có và thêm: */
 
-.form-card {
-  background-color: var(--card-background);
-  border-radius: 0.75rem;
-  padding: 2rem;
-  box-shadow: var(--shadow-md);
-  max-width: 500px;
-  margin: 0 auto;
-}
-
-h2 {
-  color: var(--text-primary);
-  margin: 0 0 1.5rem 0;
-  font-size: 1.5rem;
-  font-weight: 600;
-}
-
-form {
-  display: flex;
-  flex-direction: column;
-  gap: 1.25rem;
-}
-
-.form-group {
-  display: flex;
-  flex-direction: column;
-  gap: 0.5rem;
-}
-
-label {
-  color: var(--text-secondary);
+.error-message {
+  color: #dc2626;
   font-size: 0.875rem;
-  font-weight: 500;
+  margin-top: 0.25rem;
+  display: block;
 }
 
-input {
-  padding: 0.75rem 1rem;
-  border: 1px solid var(--border-color);
-  border-radius: 0.5rem;
-  font-size: 0.875rem;
-  transition: all 0.2s ease;
-  background-color: var(--background-color);
-  color: var(--text-primary);
+.general-error {
+  background-color: #fee2e2;
+  border: 1px solid #dc2626;
+  padding: 0.75rem;
+  border-radius: 0.375rem;
+  margin-bottom: 1rem;
 }
 
-input:focus {
-  outline: none;
-  border-color: var(--primary-color);
-  box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.1);
+input.error {
+  border-color: #dc2626;
 }
 
-input::placeholder {
-  color: var(--text-secondary);
+input.error:focus {
+  box-shadow: 0 0 0 3px rgba(220, 38, 38, 0.1);
+}
+
+.btn:disabled {
   opacity: 0.7;
-}
-
-.form-actions {
-  display: flex;
-  justify-content: flex-end;
-  gap: 1rem;
-  margin-top: 1.5rem;
-}
-
-.cancel-btn {
-  padding: 0.75rem 1.5rem;
-  background-color: var(--secondary-color);
-  color: white;
-  border: none;
-  border-radius: 0.5rem;
-  font-size: 0.875rem;
-  font-weight: 500;
-  cursor: pointer;
-  transition: all 0.2s ease;
-}
-
-.cancel-btn:hover {
-  opacity: 0.9;
-  transform: translateY(-1px);
-}
-
-.submit-btn {
-  padding: 0.75rem 1.5rem;
-  background-color: var(--primary-color);
-  color: white;
-  border: none;
-  border-radius: 0.5rem;
-  font-size: 0.875rem;
-  font-weight: 500;
-  cursor: pointer;
-  transition: all 0.2s ease;
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-}
-
-.submit-btn:hover {
-  background-color: var(--primary-hover);
-  transform: translateY(-1px);
-}
-
-@media (max-width: 768px) {
-  .form-card {
-    margin: 0 1rem;
-    padding: 1.5rem;
-  }
+  cursor: not-allowed;
 }
 </style>
