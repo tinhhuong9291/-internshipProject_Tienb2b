@@ -1,6 +1,4 @@
-const fs = require('fs');
 
-const content = `
 
 # 🧠 Personal CRM App
 
@@ -40,38 +38,52 @@ A full-stack personal CRM system to manage your customers, clients, partners, or
 
 ### 1. Clone the repository
 
-\`\`\`bash
+
 git clone https://github.com/tinhhuong9291/-internshipProject_Tienb2b.git
+
+
+
 cd personal-crm
-\`\`\`
+
 
 ### 2. Setup the Backend
 
-\`\`\`bash
+
 cd backend
+
+
 yarn install
-\`\`\`
+
 
 🔐 Create a \`.env\` file:
 
-\`\`\`
-MONGO_URI=mongodb+srv://<username>:<password>@cluster0.mongodb.net/?retryWrites=true&w=majority
+
+MONGO_URI=mongodb+srv://tiendev:wtcrF8gcBd6QOOJz@cluster0.8mdyaai.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0
+
+
 PORT=8080
-\`\`\`
+
+
+
 
 Start the backend server:
 
-\`\`\`bash
+
 yarn start dev
-\`\`\`
+
 
 ### 3. Setup the Frontend
 
-\`\`\`bash
+
 cd frontend
+
+
 npm install
+
+
+
 npm run dev
-\`\`\`
+
 
 Frontend: http://localhost:3000  
 Backend API: http://localhost:8080
@@ -82,13 +94,22 @@ Backend API: http://localhost:8080
 
 ### Customer
 
-\`\`\`
+
 GET /api/customers
+
+
 GET /api/customers/:id
+
+
 POST /api/customers
+
+
 PUT /api/customers/:id
+
+
 DELETE /api/customers/:id
-\`\`\`
+
+
 
 ---
 
@@ -100,8 +121,12 @@ Use Postman or Swagger to test. Ensure MongoDB is connected and the backend is r
 
 ## 🛠 Deployment
 
-- Frontend → Vercel
-- Backend → Render
+- Frontend → Vercel → https://internship-project-tienb2b-thanhtiens-projects-32a8cd95.vercel.app/
+
+
+- Backend → Render → https://internshipproject-tienb2b.onrender.com
+
+  
 - Database → MongoDB Atlas
 
 ---
