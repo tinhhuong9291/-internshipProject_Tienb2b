@@ -88,29 +88,6 @@ export default {
       isSubmitting: false,
     };
   },
-  // watch: {
-  //   profile: {
-  //     handler(newVal) {
-  //       if (newVal && newVal._id) {
-  //         this.editableProfile = { ...newVal };
-  //         this.resetErrors();
-  //       }
-  //     },
-  //     immediate: true,
-  //   },
-  //   "editableProfile.name"() {
-  //     this.formErrors.name = "";
-  //     this.errorMessage = "";
-  //   },
-  //   "editableProfile.email"() {
-  //     this.formErrors.email = "";
-  //     this.errorMessage = "";
-  //   },
-  //   "editableProfile.phone"() {
-  //     this.formErrors.phone = "";
-  //     this.errorMessage = "";
-  //   },
-  // },
 
   watch: {
     profile: {
@@ -180,58 +157,6 @@ export default {
 
       return isValid;
     },
-    // async saveChanges() {
-    //   if (!this.validateForm()) {
-    //     this.errorMessage = "Vui lòng kiểm tra lại các trường bên dưới";
-    //     return;
-    //   }
-
-    //   if (!this.editableProfile._id) {
-    //     this.errorMessage = "Không thể cập nhật vì thiếu ID hồ sơ";
-    //     return;
-    //   }
-
-    //   this.isSubmitting = true;
-    //   try {
-    //     const response = await fetch(
-    //       `https://internshipproject-tienb2b.onrender.com/api/customers/${this.editableProfile._id}`,
-    //       {
-    //         method: "PUT",
-    //         headers: {
-    //           "Content-Type": "application/json",
-    //         },
-    //         body: JSON.stringify({
-    //           ...this.editableProfile,
-    //           _id: this.editableProfile._id, // Explicitly include the ID
-    //         }),
-    //       }
-    //     );
-
-    //     const result = await response.json();
-
-    //     if (!response.ok) {
-    //       if (Array.isArray(result.errors)) {
-    //         result.errors.forEach((error) => {
-    //           this.formErrors[error.param] = error.msg;
-    //         });
-    //         this.errorMessage = "Vui lòng kiểm tra lại các trường bên dưới";
-    //       } else {
-    //         this.errorMessage =
-    //           result.message || "Không thể cập nhật thông tin";
-    //       }
-    //       return;
-    //     }
-
-    //     // Emit the updated profile data to parent
-    //     this.$emit("profile-updated", result);
-    //     this.$emit("close");
-    //   } catch (error) {
-    //     this.errorMessage = "Đã xảy ra lỗi khi lưu. Vui lòng thử lại.";
-    //     console.error("Error saving profile:", error);
-    //   } finally {
-    //     this.isSubmitting = false;
-    //   }
-    // },
 
     async saveChanges() {
       if (!this.validateForm()) {

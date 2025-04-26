@@ -8,7 +8,13 @@ import Users from "../views/Users.vue";
 const routes = [
   { path: "/", component: Dashboard },
   { path: "/customers", component: Customers },
-  { path: "/interactions", component: Interactions },
+  // { path: "/interactions", component: Interactions },
+  {
+    path: "/interactions/:customerId",
+    name: "interactions",
+    component: Interactions,
+    props: true,
+  },
   { path: "/tasks", component: Tasks },
   { path: "/users", component: Users },
 ];

@@ -18,6 +18,12 @@
           <button @click="$emit('delete-profile', index)" class="delete-button">
             Delete
           </button>
+          <router-link
+            :to="`/interactions/${profile._id}`"
+            class="interaction-btn"
+          >
+            View Interactions
+          </router-link>
         </div>
       </div>
     </div>
@@ -108,5 +114,21 @@ export default {
 
 .delete-button:hover {
   background-color: #d32f2f;
+}
+
+.interaction-btn {
+  display: inline-block;
+  margin-top: 8px;
+  padding: 8px 12px;
+  background: #10b981;
+  color: #fff;
+  border-radius: 4px;
+  text-decoration: none;
+  font-size: 14px;
+  transition: background 0.2s;
+}
+
+.interaction-btn:hover {
+  background: #059669;
 }
 </style>

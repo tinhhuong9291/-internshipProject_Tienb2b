@@ -1,25 +1,74 @@
-import express from 'express';
-import cors from 'cors';
-import bodyParser from 'body-parser';
-import connectDB from './config/db.js';
-import customerRoutes from './routes/customer.js';
+const express = require("express");
+const path = require("path");
+const cors = require("cors");
+const bodyParser = require("body-parser");
+const mongoose = require("mongoose");
+require("dotenv").config();
 
 const app = express();
 
+// Middleware or static file serving
+app.use(express.static(path.join(__dirname, "../vue_project/dist")));
 // Middleware
-app.use(cors());
+
+// // Middleware
+const allowedOrigins = [
+  "http://localhost:3000",
+  "https://internship-project-tienb2b-mnkw4j2gy.vercel.app",
+];
+
+// app.use(
+//   cors({
+//     origin: function (origin, callback) {
+//       if (!origin || allowedOrigins.includes(origin)) {
+//         callback(null, true);
+//       } else {
+//         callback(new Error("Not allowed by CORS"));
+//       }
+//     },
+//   })
+// );
+
+app.use(
+  cors({
+    origin: "*",
+  })
+);
+
+// app.use(
+//   cors({
+//     origin: [
+//       "http://localhost:3001",
+//       "http://localhost:3000",
+//       "https://internship-project-tienb2b-mnkw4j2gy.vercel.app",
+//     ],
+//     credentials: true,
+//   })
+// );
 app.use(bodyParser.json());
 
+// Connect to MongoDB
+const MONGODB_URI = process.env.MONGODB_URI;
 
-// Kết nối DB
-connectDB();
+mongoose
+  .connect(MONGODB_URI)
+  .then(() => console.log("Connected to MongoDB"))
+  .catch((err) => console.error("Could not connect to MongoDB:", err));
 
-// Routes
-app.use('/api/customers', customerRoutes);
+// Import routes
 
-// Xử lý lỗi 404
-app.use((req, res) => {
-  res.status(404).json({ message: 'Route not found' });
+app.use("/api/customers", require("./routes/customerRoutes"));
+app.use("/api/interactions", require("./routes/interactionRoutes"));
+app.use("/api/tasks", require("./routes/taskRoutes"));
+app.use("/api/users", require("./routes/userRoutes"));
+
+// Example route
+app.get("/", (req, res) => {
+  res.send("Server is running");
 });
 
-export default app;
+// Start server
+const PORT = process.env.PORT || 8080;
+app.listen(PORT, () => {
+  console.log(`Server is running on port ${PORT}`);
+});

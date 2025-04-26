@@ -2,12 +2,13 @@
 import AddProfile from "./components/AddProfile.vue";
 import ProfileList from "./components/ProfileList.vue";
 import EditProfile from "./components/EditProfile.vue";
-
+import Interactions from "./views/Interactions.vue";
 export default {
   components: {
     AddProfile,
     ProfileList,
     EditProfile,
+    Interactions,
   },
   data() {
     return {
@@ -236,6 +237,17 @@ export default {
         @delete-profile="deleteProfile"
         @select-profile="handleSelectProfile"
       />
+
+      <router-view v-slot="slotProps">
+        <component
+          v-if="
+            slotProps &&
+            slotProps.route &&
+            slotProps.route.name === 'interactions'
+          "
+          :is="slotProps.Component"
+        />
+      </router-view>
 
       <div v-if="isLoading" class="loading">Loading profiles...</div>
       <div v-if="errorMessage" class="error">{{ errorMessage }}</div>
