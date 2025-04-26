@@ -1,7 +1,7 @@
 import { createRouter, createWebHistory } from "vue-router";
 import Dashboard from "../views/Dashboard.vue";
 import Customers from "../views/Customers.vue";
-import Interactions from "../views/Interactions.vue";
+import InteractionList from "../components/InteractionList.vue";
 import Tasks from "../views/Tasks.vue";
 import Users from "../views/Users.vue";
 
@@ -12,7 +12,7 @@ const routes = [
   {
     path: "/interactions/:customerId",
     name: "interactions",
-    component: Interactions,
+    component: InteractionList,
     props: true,
   },
   { path: "/tasks", component: Tasks },
