@@ -233,6 +233,9 @@ export default {
 
         this.successMessage = "Cập nhật thông tin khách hàng thành công!";
         
+        // Lưu thông tin đã cập nhật vào localStorage
+        localStorage.setItem('updatedProfile', JSON.stringify(this.customerData));
+        
         // Tự động chuyển hướng sau 2 giây
         setTimeout(() => {
           this.$router.push('/customers');

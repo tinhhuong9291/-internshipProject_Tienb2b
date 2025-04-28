@@ -193,10 +193,71 @@ export default {
     toggleAddForm() {
       this.showAddForm = !this.showAddForm;
     },
+    handleProfileUpdated(updatedProfile) {
+      console.log('Profile updated:', updatedProfile);
+      // Cập nhật profile trong danh sách hiện tại
+      const index = this.profiles.findIndex(p => p._id === updatedProfile._id);
+      if (index !== -1) {
+        // Cập nhật profile trong mảng
+        this.profiles.splice(index, 1, updatedProfile);
+      }
+      
+      // Hiển thị thông báo thành công
+      this.successMessage = "Cập nhật thông tin khách hàng thành công!";
+      setTimeout(() => {
+        this.successMessage = "";
+      }, 3000);
+      
+      // Đồng bộ lại toàn bộ danh sách từ server sau khi cập nhật
+      this.fetchProfiles();
+    },
+    // Kiểm tra xem có profile đã cập nhật trong localStorage không
+    checkForUpdatedProfile() {
+      const updatedProfileJSON = localStorage.getItem('updatedProfile');
+      if (updatedProfileJSON) {
+        try {
+          const updatedProfile = JSON.parse(updatedProfileJSON);
+          console.log('Found updated profile in localStorage:', updatedProfile);
+          
+          // Cập nhật profile trong danh sách hiện tại
+          const index = this.profiles.findIndex(p => p._id === updatedProfile._id);
+          if (index !== -1) {
+            // Cập nhật profile trong mảng
+            this.profiles.splice(index, 1, updatedProfile);
+          }
+          
+          // Hiển thị thông báo thành công
+          this.successMessage = "Cập nhật thông tin khách hàng thành công!";
+          setTimeout(() => {
+            this.successMessage = "";
+          }, 3000);
+          
+          // Xóa dữ liệu khỏi localStorage sau khi đã cập nhật
+          localStorage.removeItem('updatedProfile');
+          
+          // Đồng bộ lại toàn bộ danh sách từ server
+          this.fetchProfiles();
+        } catch (error) {
+          console.error('Error parsing updated profile from localStorage:', error);
+        }
+      }
+    },
   },
   mounted() {
     this.fetchProfiles();
+    
+    // Kiểm tra profile đã cập nhật khi component được mount
+    this.checkForUpdatedProfile();
   },
+  // Add router afterEach hook to check for updated profile after navigation
+  watch: {
+    $route(to, from) {
+      // Nếu đang quay lại từ trang edit-customer, kiểm tra localStorage
+      if (from.path.includes('/edit-customer/') && to.path === '/customers') {
+        this.checkForUpdatedProfile();
+      }
+    }
+  }
 };
 </script>
 
