@@ -225,32 +225,33 @@ export default {
       </div>
     </header>
     <main>
-      <AddProfile
-        v-if="showAddForm"
-        @add-profile="addProfile"
-        @cancel="toggleAddForm"
-      />
-
-      <ProfileList
-        v-if="!showAddForm"
-        :profiles="filteredProfiles"
-        @delete-profile="deleteProfile"
-        @select-profile="handleSelectProfile"
-      />
-
-      <router-view v-slot="slotProps">
-        <component
-          v-if="
-            slotProps &&
-            slotProps.route &&
-            slotProps.route.name === 'interactions'
-          "
-          :is="slotProps.Component"
+      <router-view v-if="$route.path.includes('/interactions/')"></router-view>
+      
+      <div v-else>
+        <AddProfile
+          v-if="showAddForm"
+          @add-profile="addProfile"
+          @cancel="toggleAddForm"
         />
-      </router-view>
 
-      <div v-if="isLoading" class="loading">Loading profiles...</div>
-      <div v-if="errorMessage" class="error">{{ errorMessage }}</div>
+        <ProfileList
+          v-if="!showAddForm"
+          :profiles="filteredProfiles"
+          @delete-profile="deleteProfile"
+          @select-profile="handleSelectProfile"
+        />
+
+        <div v-if="isLoading" class="loading">Loading profiles...</div>
+        <div v-if="errorMessage" class="error">{{ errorMessage }}</div>
+        
+        <div
+          v-if="
+            !filteredProfiles.length && !isLoading && !errorMessage && !showAddForm
+          "
+        >
+          <p>No profiles found.</p>
+        </div>
+      </div>
     </main>
 
     <EditProfile
@@ -259,12 +260,9 @@ export default {
       @profile-updated="updateProfile"
       @close="selectedProfile = null"
     />
-    <div
-      v-if="
-        !filteredProfiles.length && !isLoading && !errorMessage && !showAddForm
-      "
-    >
-      <p>No profiles found.</p>
+    
+    <div v-if="successMessage" class="success-message">
+      {{ successMessage }}
     </div>
   </div>
 </template>
