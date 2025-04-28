@@ -225,7 +225,7 @@ export default {
       </div>
     </header>
     <main>
-      <router-view v-if="$route.path.includes('/interactions/')"></router-view>
+      <router-view v-if="$route.path.includes('/interactions/') || $route.path.includes('/edit-customer/')"></router-view>
       
       <div v-else>
         <AddProfile

@@ -15,6 +15,12 @@ const routes = [
     component: InteractionList,
     props: true,
   },
+  {
+    path: "/edit-customer/:customerId",
+    name: "edit-customer",
+    component: () => import("../views/EditCustomerView.vue"),
+    props: true,
+  },
   { path: "/tasks", component: Tasks },
   { path: "/users", component: Users },
 ];

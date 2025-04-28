@@ -12,9 +12,9 @@
         <div class="profile-info">
           <h3>{{ profile.name }}</h3>
           <p class="email">{{ profile.email }}</p>
-          <button @click="$emit('select-profile', profile)" class="edit-button">
+          <router-link :to="`/edit-customer/${profile._id}`" class="edit-button">
             Edit
-          </button>
+          </router-link>
           <button @click="$emit('delete-profile', index)" class="delete-button">
             Delete
           </button>
@@ -88,19 +88,18 @@ export default {
   font-size: 14px;
 }
 
-.edit-button,
-.delete-button {
+.edit-button {
   margin-top: 8px;
   padding: 8px 12px;
   border: none;
   border-radius: 4px;
   cursor: pointer;
   font-size: 14px;
-}
-
-.edit-button {
   background-color: #007bff;
   color: white;
+  display: inline-block;
+  text-decoration: none;
+  text-align: center;
 }
 
 .edit-button:hover {
@@ -108,6 +107,12 @@ export default {
 }
 
 .delete-button {
+  margin-top: 8px;
+  padding: 8px 12px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 14px;
   background-color: #f44336;
   color: white;
 }
