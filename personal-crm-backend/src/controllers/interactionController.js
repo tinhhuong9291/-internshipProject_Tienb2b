@@ -14,11 +14,17 @@ exports.getAll = async (req, res) => {
 };
 
 // Get interactions by customer ID
+
 exports.getByCustomerId = async (req, res) => {
   try {
     const { customerId } = req.params;
+    if (!mongoose.Types.ObjectId.isValid(customerId)) {
+      return res.status(400).json({ message: "Invalid customerId" });
+    }
     const interactions = await Interaction.find({
-      customerId: mongoose.Types.ObjectId(customerId),
+      customerId: customerId,
+    }).sort({
+      date: -1,
     });
     res.status(200).json(interactions);
   } catch (err) {
