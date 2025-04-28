@@ -1,4 +1,3 @@
-<!-- vue_project/src/views/Interactions.vue -->
 <template>
   <div class="interactions-page">
     <div class="page-header">
