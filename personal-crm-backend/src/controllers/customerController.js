@@ -30,8 +30,16 @@ exports.getCustomerById = async (req, res) => {
 // Create new customer
 exports.createCustomer = async (req, res) => {
   try {
-    const { name, email, phone } = req.body;
-    const newCustomer = new Customer({ name, email, phone });
+    const { name, email, phone, address, tags, type, notes } = req.body;
+    const newCustomer = new Customer({
+      name,
+      email,
+      phone,
+      address,
+      tags,
+      type,
+      notes,
+    });
     await newCustomer.save();
     res
       .status(201)
@@ -48,10 +56,10 @@ exports.createCustomer = async (req, res) => {
 // Update customer
 exports.updateCustomer = async (req, res) => {
   try {
-    const { name, email, phone } = req.body;
+    const { name, email, phone, address, tags, type, notes } = req.body;
     const updatedCustomer = await Customer.findByIdAndUpdate(
       req.params.id,
-      { name, email, phone },
+      { name, email, phone, address, tags, type, notes },
       { new: true }
     );
     if (!updatedCustomer) {

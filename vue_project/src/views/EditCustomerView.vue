@@ -64,6 +64,55 @@
             formErrors.phone
           }}</span>
         </div>
+        
+        <div class="form-group">
+          <label for="address">Địa chỉ:</label>
+          <input
+            id="address"
+            v-model="customerData.address"
+            type="text"
+            placeholder="Nhập địa chỉ"
+          />
+        </div>
+
+        <div class="form-group">
+          <label for="type">Loại khách hàng:</label>
+          <select id="type" v-model="customerData.type" class="form-select">
+            <option value="freelance">Freelance</option>
+            <option value="partner">Đối tác</option>
+            <option value="friend">Bạn bè</option>
+            <option value="other">Khác</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label for="tags">Tags:</label>
+          <div class="tags-input">
+            <input
+              type="text"
+              id="tagInput"
+              v-model="tagInput"
+              @keyup.enter="addTag"
+              placeholder="Nhập tag và nhấn Enter"
+            />
+            <div class="tags-container">
+              <span class="tag" v-for="(tag, index) in customerData.tags" :key="index">
+                {{ tag }}
+                <span class="tag-remove" @click="removeTag(index)">&times;</span>
+              </span>
+            </div>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="notes">Ghi chú:</label>
+          <textarea
+            id="notes"
+            v-model="customerData.notes"
+            rows="3"
+            placeholder="Nhập ghi chú"
+          ></textarea>
+        </div>
 
         <div v-if="submitError" class="error-message general-error">
           {{ submitError }}
@@ -103,8 +152,13 @@ export default {
       customerData: {
         name: "",
         email: "",
-        phone: ""
+        phone: "",
+        address: "",
+        type: "other",
+        tags: [],
+        notes: ""
       },
+      tagInput: "",
       isLoading: false,
       isSubmitting: false,
       errorMessage: "",
@@ -139,7 +193,11 @@ export default {
           _id: data._id,
           name: data.name,
           email: data.email,
-          phone: data.phone
+          phone: data.phone,
+          address: data.address || "",
+          type: data.type || "other",
+          tags: data.tags || [],
+          notes: data.notes || ""
         };
       } catch (error) {
         this.errorMessage = "Không thể tải thông tin khách hàng. Vui lòng thử lại sau.";
@@ -147,6 +205,18 @@ export default {
       } finally {
         this.isLoading = false;
       }
+    },
+
+    addTag() {
+      const tag = this.tagInput.trim();
+      if (tag && !this.customerData.tags.includes(tag)) {
+        this.customerData.tags.push(tag);
+      }
+      this.tagInput = "";
+    },
+
+    removeTag(index) {
+      this.customerData.tags.splice(index, 1);
     },
 
     resetErrors() {
@@ -199,6 +269,11 @@ export default {
       if (!this.validateForm()) {
         this.submitError = "Vui lòng kiểm tra lại các trường bên dưới";
         return;
+      }
+
+      // Thêm tag cuối cùng nếu đang nhập
+      if (this.tagInput.trim()) {
+        this.addTag();
       }
 
       this.isSubmitting = true;
@@ -336,7 +411,9 @@ export default {
   color: #334155;
 }
 
-.form-group input {
+.form-group input,
+.form-group select,
+.form-group textarea {
   padding: 12px 16px;
   border: 1px solid #cbd5e1;
   border-radius: 8px;
@@ -344,10 +421,17 @@ export default {
   transition: all 0.2s;
 }
 
-.form-group input:focus {
+.form-group input:focus,
+.form-group select:focus,
+.form-group textarea:focus {
   border-color: #4f46e5;
   box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.15);
   outline: none;
+}
+
+.form-group textarea {
+  resize: vertical;
+  min-height: 100px;
 }
 
 .form-group input.error {
@@ -419,6 +503,40 @@ export default {
   opacity: 0.7;
   cursor: not-allowed;
   transform: none;
+}
+
+/* Styles cho tags */
+.tags-input {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.tags-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-top: 0.5rem;
+}
+
+.tag {
+  display: inline-flex;
+  align-items: center;
+  background-color: #e0e7ff;
+  color: #4f46e5;
+  padding: 0.25rem 0.5rem;
+  border-radius: 9999px;
+  font-size: 0.875rem;
+}
+
+.tag-remove {
+  cursor: pointer;
+  margin-left: 0.25rem;
+  font-weight: bold;
+}
+
+.tag-remove:hover {
+  color: #dc2626;
 }
 
 @media (max-width: 640px) {

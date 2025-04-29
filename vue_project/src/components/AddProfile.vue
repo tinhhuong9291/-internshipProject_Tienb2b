@@ -42,6 +42,55 @@
           <span class="error-message" v-if="formErrors.phone">{{ formErrors.phone }}</span>
         </div>
 
+        <div class="form-group">
+          <label for="address">Địa chỉ</label>
+          <input
+            type="text"
+            id="address"
+            v-model="profile.address"
+            placeholder="Nhập địa chỉ"
+          />
+        </div>
+
+        <div class="form-group">
+          <label for="type">Loại khách hàng</label>
+          <select id="type" v-model="profile.type">
+            <option value="freelance">Freelance</option>
+            <option value="partner">Đối tác</option>
+            <option value="friend">Bạn bè</option>
+            <option value="other">Khác</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label for="tags">Tags</label>
+          <div class="tags-input">
+            <input
+              type="text"
+              id="tagInput"
+              v-model="tagInput"
+              @keyup.enter="addTag"
+              placeholder="Nhập tag và nhấn Enter"
+            />
+            <div class="tags-container">
+              <span class="tag" v-for="(tag, index) in profile.tags" :key="index">
+                {{ tag }}
+                <span class="tag-remove" @click="removeTag(index)">&times;</span>
+              </span>
+            </div>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="notes">Ghi chú</label>
+          <textarea
+            id="notes"
+            v-model="profile.notes"
+            rows="3"
+            placeholder="Nhập ghi chú"
+          ></textarea>
+        </div>
+
         <div v-if="errorMessage" class="error-message general-error">
           {{ errorMessage }}
         </div>
@@ -68,7 +117,12 @@ export default {
         name: "",
         email: "",
         phone: "",
+        address: "",
+        type: "other", // Giá trị mặc định
+        tags: [],
+        notes: ""
       },
+      tagInput: "",
       formErrors: {
         name: '',
         email: '',
@@ -93,6 +147,16 @@ export default {
     }
   },
   methods: {
+    addTag() {
+      const tag = this.tagInput.trim();
+      if (tag && !this.profile.tags.includes(tag)) {
+        this.profile.tags.push(tag);
+      }
+      this.tagInput = "";
+    },
+    removeTag(index) {
+      this.profile.tags.splice(index, 1);
+    },
     validateForm() {
       let isValid = true;
       this.resetErrors();
@@ -148,6 +212,11 @@ export default {
 
       this.isSubmitting = true;
       try {
+        // Thêm tag cuối cùng nếu còn đang nhập
+        if (this.tagInput.trim()) {
+          this.addTag();
+        }
+        
         this.$emit("add-profile", { ...this.profile });
         this.resetForm();
       } catch (error) {
@@ -166,7 +235,12 @@ export default {
         name: "",
         email: "",
         phone: "",
+        address: "",
+        type: "other",
+        tags: [],
+        notes: ""
       };
+      this.tagInput = "";
       this.resetErrors();
     },
   },
@@ -174,7 +248,90 @@ export default {
 </script>
 
 <style scoped>
-/* Giữ các styles hiện có và thêm: */
+.add-profile {
+  padding: 1rem;
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+.form-card {
+  background: white;
+  border-radius: 8px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  padding: 1.5rem;
+}
+
+.form-card h2 {
+  color: #374151;
+  margin-bottom: 1.5rem;
+  text-align: center;
+  font-size: 1.5rem;
+}
+
+.form-group {
+  margin-bottom: 1.25rem;
+}
+
+.form-group label {
+  display: block;
+  font-weight: 500;
+  margin-bottom: 0.5rem;
+  color: #374151;
+}
+
+.form-group input,
+.form-group select,
+.form-group textarea {
+  width: 100%;
+  padding: 0.625rem;
+  border: 1px solid #d1d5db;
+  border-radius: 0.375rem;
+  font-size: 0.9rem;
+}
+
+.form-group textarea {
+  resize: vertical;
+  min-height: 100px;
+}
+
+.form-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 1rem;
+  margin-top: 1.5rem;
+}
+
+.cancel-btn,
+.submit-btn {
+  padding: 0.5rem 1.25rem;
+  border-radius: 0.375rem;
+  font-weight: 500;
+  font-size: 0.9rem;
+  cursor: pointer;
+  transition: background-color 0.2s;
+  border: none;
+}
+
+.cancel-btn {
+  background-color: #f3f4f6;
+  color: #4b5563;
+}
+
+.cancel-btn:hover {
+  background-color: #e5e7eb;
+}
+
+.submit-btn {
+  background-color: #4f46e5;
+  color: white;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.submit-btn:hover {
+  background-color: #4338ca;
+}
 
 .error-message {
   color: #dc2626;
@@ -202,5 +359,39 @@ input.error:focus {
 .btn:disabled {
   opacity: 0.7;
   cursor: not-allowed;
+}
+
+/* Styles cho tags */
+.tags-input {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.tags-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-top: 0.5rem;
+}
+
+.tag {
+  display: inline-flex;
+  align-items: center;
+  background-color: #e0e7ff;
+  color: #4f46e5;
+  padding: 0.25rem 0.5rem;
+  border-radius: 9999px;
+  font-size: 0.875rem;
+}
+
+.tag-remove {
+  cursor: pointer;
+  margin-left: 0.25rem;
+  font-weight: bold;
+}
+
+.tag-remove:hover {
+  color: #dc2626;
 }
 </style>

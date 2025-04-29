@@ -21,6 +21,17 @@ router.post(
       .withMessage("Số điện thoại chỉ được chứa số")
       .isLength({ min: 10, max: 11 })
       .withMessage("Số điện thoại phải có 10-11 số"),
+    body("address")
+      .isLength({ min: 3, max: 50 })
+      .withMessage("Diachi phai co 3-50 ky tu"),
+    body("tags"),
+
+    body("type")
+      .isIn(["freelance", "partner", "friend", "other"])
+      .withMessage("Type phai la freelance, partner, friend hoac other"),
+    body("notes")
+      .isLength({ min: 3, max: 50 })
+      .withMessage("Notes phai co 3-50 ky tu"),
   ],
   (req, res, next) => {
     const errors = validationResult(req);
@@ -50,6 +61,16 @@ router.put(
       .withMessage("Số điện thoại chỉ được chứa số")
       .isLength({ min: 10, max: 11 })
       .withMessage("Số điện thoại phải có 10-11 số"),
+    body("address")
+      .isLength({ min: 3, max: 50 })
+      .withMessage("Diachi phai co 3-50 ky tu"),
+    body("tags"),
+    body("type")
+      .isIn(["freelance", "partner", "friend", "other"])
+      .withMessage("Type phai la freelance, partner, friend hoac other"),
+    body("notes")
+      .isLength({ min: 3, max: 50 })
+      .withMessage("Notes phai co 3-50 ky tu"),
   ],
   (req, res, next) => {
     const errors = validationResult(req);
