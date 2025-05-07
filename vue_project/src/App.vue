@@ -194,58 +194,65 @@ export default {
       this.showAddForm = !this.showAddForm;
     },
     handleProfileUpdated(updatedProfile) {
-      console.log('Profile updated:', updatedProfile);
+      console.log("Profile updated:", updatedProfile);
       // Cập nhật profile trong danh sách hiện tại
-      const index = this.profiles.findIndex(p => p._id === updatedProfile._id);
+      const index = this.profiles.findIndex(
+        (p) => p._id === updatedProfile._id
+      );
       if (index !== -1) {
         // Cập nhật profile trong mảng
         this.profiles.splice(index, 1, updatedProfile);
       }
-      
+
       // Hiển thị thông báo thành công
       this.successMessage = "Cập nhật thông tin khách hàng thành công!";
       setTimeout(() => {
         this.successMessage = "";
       }, 3000);
-      
+
       // Đồng bộ lại toàn bộ danh sách từ server sau khi cập nhật
       this.fetchProfiles();
     },
     // Kiểm tra xem có profile đã cập nhật trong localStorage không
     checkForUpdatedProfile() {
-      const updatedProfileJSON = localStorage.getItem('updatedProfile');
+      const updatedProfileJSON = localStorage.getItem("updatedProfile");
       if (updatedProfileJSON) {
         try {
           const updatedProfile = JSON.parse(updatedProfileJSON);
-          console.log('Found updated profile in localStorage:', updatedProfile);
-          
+          console.log("Found updated profile in localStorage:", updatedProfile);
+
           // Cập nhật profile trong danh sách hiện tại
-          const index = this.profiles.findIndex(p => p._id === updatedProfile._id);
+          const index = this.profiles.findIndex(
+            (p) => p._id === updatedProfile._id
+          );
           if (index !== -1) {
             // Cập nhật profile trong mảng
             this.profiles.splice(index, 1, updatedProfile);
           }
-          
+
           // Hiển thị thông báo thành công
           this.successMessage = "Cập nhật thông tin khách hàng thành công!";
           setTimeout(() => {
             this.successMessage = "";
           }, 3000);
-          
+
           // Xóa dữ liệu khỏi localStorage sau khi đã cập nhật
-          localStorage.removeItem('updatedProfile');
-          
+          localStorage.removeItem("updatedProfile");
+
           // Đồng bộ lại toàn bộ danh sách từ server
           this.fetchProfiles();
         } catch (error) {
-          console.error('Error parsing updated profile from localStorage:', error);
+          console.error(
+            "Error parsing updated profile from localStorage:",
+            error
+          );
         }
       }
     },
   },
   mounted() {
     this.fetchProfiles();
-    
+
     // Kiểm tra profile đã cập nhật khi component được mount
     this.checkForUpdatedProfile();
   },
@@ -253,11 +260,11 @@ export default {
   watch: {
     $route(to, from) {
       // Nếu đang quay lại từ trang edit-customer, kiểm tra localStorage
-      if (from.path.includes('/edit-customer/') && to.path === '/customers') {
+      if (from.path.includes("/edit-customer/") && to.path === "/customers") {
         this.checkForUpdatedProfile();
       }
-    }
-  }
+    },
+  },
 };
 </script>
 
@@ -267,7 +274,37 @@ export default {
       <div class="header-content">
         <h1>Customer Management</h1>
         <div class="header-actions">
-          <div class="search-container">
+          <!-- Thêm nút Dashboard -->
+          <!-- <router-link to="/dashboard" class="dashboard-link">
+            <i class="fas fa-chart-bar"></i> Dashboard
+          </router-link> -->
+          <router-link
+            to="/dashboard"
+            class="dashboard-link"
+            custom
+            v-slot="{ navigate, isActive }"
+          >
+            <div @click="navigate" :class="['nav-item', { active: isActive }]">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="20"
+                height="20"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              >
+                <rect x="3" y="3" width="18" height="18" rx="2" ry="2" />
+                <line x1="3" y1="9" x2="21" y2="9" />
+                <line x1="9" y1="21" x2="9" y2="9" />
+              </svg>
+              <span>Dashboard</span>
+            </div>
+          </router-link>
+          <!-- ...các nút khác... -->
+          <!-- <div class="search-container">
             <label for="searchQuery">Search Profiles:</label>
             <input
               type="text"
@@ -278,16 +315,59 @@ export default {
               autocomplete="off"
               @keyup.enter="handleSearchInput"
             />
-          </div>
+          </div> -->
+          <!-- <div class="search-bar">
+            <svg
+              width="18"
+              height="18"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              viewBox="0 0 24 24"
+            >
+              <circle cx="11" cy="11" r="8" />
+              <line x1="21" y1="21" x2="16.65" y2="16.65" />
+            </svg>
+            <input
+              type="text"
+              placeholder="Search customers..."
+              v-model="searchQuery"
+              @input="handleSearch"
+            />
+          </div> -->
+
           <button class="add-customer-btn" @click="toggleAddForm">
-            <i class="fas fa-plus"></i> Add New Customer
+            <svg
+              width="16"
+              height="16"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              viewBox="0 0 24 24"
+              class="btn-icon"
+            >
+              <line x1="12" y1="5" x2="12" y2="19"></line>
+              <line x1="5" y1="12" x2="19" y2="12"></line>
+            </svg>
+
+            Add New Customer
           </button>
         </div>
       </div>
     </header>
     <main>
-      <router-view v-if="$route.path.includes('/interactions/') || $route.path.includes('/edit-customer/')"></router-view>
-      
+      <router-view
+        v-if="
+          $route.path === '/dashboard' ||
+          $route.path.includes('/interactions/') ||
+          $route.path.includes('/edit-customer/')
+        "
+      ></router-view>
+
       <div v-else>
         <AddProfile
           v-if="showAddForm"
@@ -304,10 +384,13 @@ export default {
 
         <div v-if="isLoading" class="loading">Loading profiles...</div>
         <div v-if="errorMessage" class="error">{{ errorMessage }}</div>
-        
+
         <div
           v-if="
-            !filteredProfiles.length && !isLoading && !errorMessage && !showAddForm
+            !filteredProfiles.length &&
+            !isLoading &&
+            !errorMessage &&
+            !showAddForm
           "
         >
           <p>No profiles found.</p>
@@ -321,7 +404,7 @@ export default {
       @profile-updated="updateProfile"
       @close="selectedProfile = null"
     />
-    
+
     <div v-if="successMessage" class="success-message">
       {{ successMessage }}
     </div>

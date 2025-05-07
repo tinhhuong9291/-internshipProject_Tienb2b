@@ -2,27 +2,63 @@ import { createRouter, createWebHistory } from "vue-router";
 import Dashboard from "../views/Dashboard.vue";
 import Customers from "../views/Customers.vue";
 import InteractionList from "../components/InteractionList.vue";
+import Interactions from "../views/Interactions.vue";
 import Tasks from "../views/Tasks.vue";
 import Users from "../views/Users.vue";
+import AllInteractions from '../views/AllInteractions.vue';
 
 const routes = [
-  { path: "/", component: Dashboard },
-  { path: "/customers", component: Customers },
-  // { path: "/interactions", component: Interactions },
+  {
+    path: "/",
+    redirect: "/dashboard" // Redirect root to dashboard
+  },
+  { 
+    path: "/dashboard", 
+    name: "Dashboard", 
+    component: Dashboard 
+  },
+  { 
+    path: "/customers", 
+    name: "Customers",
+    component: Customers 
+  },
+  { 
+    path: "/interactions", 
+    name: "Interactions",
+    component: Interactions 
+  },
   {
     path: "/interactions/:customerId",
-    name: "interactions",
+    name: "CustomerInteractions",
     component: InteractionList,
     props: true,
   },
   {
     path: "/edit-customer/:customerId",
-    name: "edit-customer",
+    name: "EditCustomer",
     component: () => import("../views/EditCustomerView.vue"),
     props: true,
   },
-  { path: "/tasks", component: Tasks },
-  { path: "/users", component: Users },
+  { 
+    path: "/tasks", 
+    name: "Tasks",
+    component: Tasks 
+  },
+  { 
+    path: "/users", 
+    name: "Users",
+    component: Users 
+  },
+  {
+    path: '/interactions-all',
+    name: 'AllInteractions',
+    component: AllInteractions
+  },
+  // Catch-all route for 404
+  {
+    path: "/:pathMatch(.*)*",
+    redirect: "/dashboard"
+  }
 ];
 
 const router = createRouter({
