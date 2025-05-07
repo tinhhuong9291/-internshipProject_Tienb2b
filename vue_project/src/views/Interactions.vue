@@ -194,6 +194,22 @@ export default {
       });
     },
 
+    // function fetch all interactions
+    async fetchAllInteractions() {
+      try {
+        const response = await fetch(
+          "https://internshipproject-tienb2b.onrender.com/api/interactions"
+        );
+        if (!response.ok) {
+          throw new Error(`Error: ${response.statusText}`);
+        }
+        this.interactions = await response.json();
+      } catch (error) {
+        this.errorMessage = "Failed to fetch interactions.";
+        console.error("Error fetching interactions:", error);
+      }
+    },
+
     async addInteraction() {
       try {
         const interactionData = {
