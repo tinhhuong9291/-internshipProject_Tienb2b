@@ -75,7 +75,7 @@
 
         <router-link
           to="/interactions-all"
-          class="dashboard-link"
+          class="all-interactions-page"
           custom
           v-slot="{ navigate, isActive }"
         >
@@ -194,6 +194,7 @@
           </svg>
           <span>Dashboard</span>
         </router-link> -->
+        <!-- search bar and add customer button -->
         <div class="header-actions">
           <div class="search-bar">
             <svg
@@ -216,23 +217,6 @@
               @input="handleSearch"
             />
           </div>
-          <!-- <router-link to="/add-customer" class="btn btn-primary">
-            <svg
-              width="16"
-              height="16"
-              fill="none"
-              stroke="currentColor"
-              stroke-width="2"
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              viewBox="0 0 24 24"
-              class="btn-icon"
-            >
-              <line x1="12" y1="5" x2="12" y2="19"></line>
-              <line x1="5" y1="12" x2="19" y2="12"></line>
-            </svg>
-            Add New Customer
-          </router-link> -->
         </div>
       </header>
 
@@ -579,14 +563,24 @@ const activeCustomers = computed(() => {
   return customers.value.filter((c) => c.isActive).length;
 });
 
-const recentInteractions = computed(() => {
-  const oneWeekAgo = new Date();
-  oneWeekAgo.setDate(oneWeekAgo.getDate() - 7);
+// const recentInteractions = computed(() => {
+//   const oneWeekAgo = new Date();
+//   oneWeekAgo.setDate(oneWeekAgo.getDate() - 7);
 
-  return interactions.value.filter((i) => {
-    const interactionDate = new Date(i.date);
-    return interactionDate >= oneWeekAgo;
-  });
+//   return interactions.value.filter((i) => {
+//     const interactionDate = new Date(i.date);
+//     return interactionDate >= oneWeekAgo;
+//   });
+// });
+// get alll interactions
+const recentInteractions = computed(() => {
+  return interactions.value.filter(
+    (i) =>
+      i.type === "call" ||
+      i.type === "email" ||
+      i.type === "meeting" ||
+      i.type === "message"
+  );
 });
 
 const upcomingTasks = computed(() => {

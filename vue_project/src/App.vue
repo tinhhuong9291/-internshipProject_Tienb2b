@@ -274,15 +274,12 @@ export default {
       <div class="header-content">
         <h1>Customer Management</h1>
         <div class="header-actions">
-          <!-- Thêm nút Dashboard -->
-          <!-- <router-link to="/dashboard" class="dashboard-link">
-            <i class="fas fa-chart-bar"></i> Dashboard
-          </router-link> -->
           <router-link
             to="/dashboard"
             class="dashboard-link"
             custom
             v-slot="{ navigate, isActive }"
+            v-if="$route.path !== '/dashboard'"
           >
             <div @click="navigate" :class="['nav-item', { active: isActive }]">
               <svg
@@ -303,20 +300,8 @@ export default {
               <span>Dashboard</span>
             </div>
           </router-link>
-          <!-- ...các nút khác... -->
-          <!-- <div class="search-container">
-            <label for="searchQuery">Search Profiles:</label>
-            <input
-              type="text"
-              id="searchQuery"
-              name="searchQuery"
-              v-model="searchQuery"
-              placeholder="Search profiles..."
-              autocomplete="off"
-              @keyup.enter="handleSearchInput"
-            />
-          </div> -->
-          <!-- <div class="search-bar">
+          <!-- Thêm nút Search -->
+          <div class="search-bar" v-if="$route.path !== '/dashboard'">
             <svg
               width="18"
               height="18"
@@ -336,9 +321,14 @@ export default {
               v-model="searchQuery"
               @input="handleSearch"
             />
-          </div> -->
+          </div>
 
-          <button class="add-customer-btn" @click="toggleAddForm">
+          <!-- Thêm điều kiện khi ở trang dashboard thì ẩn hiển thị nút "Add New Customer"  -->
+          <button
+            class="add-customer-btn"
+            @click="toggleAddForm"
+            v-if="$route.path !== '/dashboard'"
+          >
             <svg
               width="16"
               height="16"
@@ -353,7 +343,6 @@ export default {
               <line x1="12" y1="5" x2="12" y2="19"></line>
               <line x1="5" y1="12" x2="19" y2="12"></line>
             </svg>
-
             Add New Customer
           </button>
         </div>
@@ -364,7 +353,8 @@ export default {
         v-if="
           $route.path === '/dashboard' ||
           $route.path.includes('/interactions/') ||
-          $route.path.includes('/edit-customer/')
+          $route.path.includes('/edit-customer/') ||
+          $route.path.includes('/interactions-all/')
         "
       ></router-view>
 
