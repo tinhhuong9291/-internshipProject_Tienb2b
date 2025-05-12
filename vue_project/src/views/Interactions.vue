@@ -120,6 +120,8 @@
 </template>
 
 <script>
+// import { emailService } from "../services/emailService";
+
 export default {
   props: {
     customerId: {
@@ -243,6 +245,16 @@ export default {
 
         // Refresh interactions list
         await this.fetchInteractions();
+
+        // Gửi email thông báo
+        // if (this.customer.email) {
+        //   await emailService.sendInteractionNotification(
+        //     this.customer.email,
+        //     interactionData
+        //   );
+
+        //   this.$toast.success('Email notification sent successfully');
+        // }
       } catch (error) {
         this.errorMessage = `Failed to ${
           this.editMode ? "update" : "add"
@@ -304,6 +316,26 @@ export default {
         console.error("Error deleting interaction:", error);
       }
     },
+
+    // async handleAddInteraction(interaction) {
+    //   try {
+    //     // Lưu interaction vào database
+    //     const savedInteraction = await this.saveInteraction(interaction);
+
+    //     // Gửi email thông báo
+    //     if (this.customer.email) {
+    //       await emailService.sendInteractionNotification(
+    //         this.customer.email,
+    //         savedInteraction
+    //       );
+
+    //       this.$toast.success('Email notification sent successfully');
+    //     }
+    //   } catch (error) {
+    //     this.$toast.error('Failed to send email notification');
+    //     console.error('Error:', error);
+    //   }
+    // }
   },
 };
 </script>

@@ -75,7 +75,7 @@
 
         <router-link
           to="/interactions-all"
-          class="all-interactions-page"
+          class="AllInteractions-link"
           custom
           v-slot="{ navigate, isActive }"
         >
@@ -176,24 +176,6 @@
     <!-- Main Content -->
     <main class="main-content">
       <header class="main-header">
-        <!-- <router-link to="/dashboard" class="header-logo">
-          <svg
-            width="28"
-            height="28"
-            fill="none"
-            stroke="currentColor"
-            stroke-width="2"
-            stroke-linecap="round"
-            stroke-linejoin="round"
-            viewBox="0 0 24 24"
-          >
-            <circle cx="12" cy="12" r="10" />
-            <polygon
-              points="16.24 7.76 14.12 14.12 7.76 16.24 9.88 9.88 16.24 7.76"
-            />
-          </svg>
-          <span>Dashboard</span>
-        </router-link> -->
         <!-- search bar and add customer button -->
         <div class="header-actions">
           <div class="search-bar">

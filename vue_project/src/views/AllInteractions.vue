@@ -3,7 +3,7 @@
     <div class="page-header">
       <h2>All Interactions</h2>
       <div class="header-actions">
-        <div class="search-bar">
+        <!-- <div class="search-bar">
           <svg
             width="18"
             height="18"
@@ -23,7 +23,7 @@
             v-model="searchQuery"
             @input="handleSearch"
           />
-        </div>
+        </div> -->
         <div class="filter-section">
           <select v-model="filterType" @change="handleFilterChange">
             <option value="">All Types</option>
@@ -55,6 +55,7 @@
             v-for="interaction in filteredInteractions"
             :key="interaction._id"
           >
+            <!-- fix loi khong load duoc customer name -->
             <td>
               {{
                 interaction.customerName || interaction.customer?.name || "N/A"
@@ -174,9 +175,7 @@ const fetchInteractions = async () => {
 };
 
 // Event handlers
-const handleSearch = () => {
-  // Additional search logic if needed
-};
+const handleSearch = () => {};
 
 const handleFilterChange = () => {
   // Additional filter logic if needed

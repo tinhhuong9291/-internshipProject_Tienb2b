@@ -3,12 +3,14 @@ import AddProfile from "./components/AddProfile.vue";
 import ProfileList from "./components/ProfileList.vue";
 import EditProfile from "./components/EditProfile.vue";
 import Interactions from "./views/Interactions.vue";
+import AllInteractions from "./views/AllInteractions.vue";
 export default {
   components: {
     AddProfile,
     ProfileList,
     EditProfile,
     Interactions,
+    AllInteractions,
   },
   data() {
     return {
@@ -301,7 +303,13 @@ export default {
             </div>
           </router-link>
           <!-- Thêm nút Search -->
-          <div class="search-bar" v-if="$route.path !== '/dashboard'">
+          <div
+            class="search-bar"
+            v-if="
+              $route.path !== '/dashboard' &&
+              $route.path !== '/interactions-all'
+            "
+          >
             <svg
               width="18"
               height="18"
@@ -323,11 +331,39 @@ export default {
             />
           </div>
 
+          <router-link
+            to="/interactions-all"
+            class="AllInteractions-link"
+            custom
+            v-slot="{ navigate, isActive }"
+            v-if="$route.path !== '/dashboard'"
+          >
+            <div @click="navigate" :class="['nav-item', { active: isActive }]">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="20"
+                height="20"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              >
+                <path d="M12 2L2 7h20L12 2z" />
+                <path d="M2 17l10 5 10-5V7L12 12 2 7v10z" />
+              </svg>
+              <span>Interactions</span>
+            </div>
+          </router-link>
           <!-- Thêm điều kiện khi ở trang dashboard thì ẩn hiển thị nút "Add New Customer"  -->
           <button
             class="add-customer-btn"
             @click="toggleAddForm"
-            v-if="$route.path !== '/dashboard'"
+            v-if="
+              $route.path !== '/dashboard' &&
+              $route.path !== '/interactions-all'
+            "
           >
             <svg
               width="16"
@@ -354,7 +390,7 @@ export default {
           $route.path === '/dashboard' ||
           $route.path.includes('/interactions/') ||
           $route.path.includes('/edit-customer/') ||
-          $route.path.includes('/interactions-all/')
+          $route.path === '/interactions-all'
         "
       ></router-view>
 

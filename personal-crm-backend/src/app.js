@@ -61,7 +61,7 @@ app.use("/api/customers", require("./routes/customerRoutes"));
 app.use("/api/interactions", require("./routes/interactionRoutes"));
 app.use("/api/tasks", require("./routes/taskRoutes"));
 app.use("/api/users", require("./routes/userRoutes"));
-
+app.use("/api/email", require("./routes/emailRoutes"));
 // Example route
 app.get("/", (req, res) => {
   res.send("Server is running");
