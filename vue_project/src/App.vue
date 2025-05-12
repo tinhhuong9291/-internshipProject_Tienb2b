@@ -307,7 +307,8 @@ export default {
             class="search-bar"
             v-if="
               $route.path !== '/dashboard' &&
-              $route.path !== '/interactions-all'
+              $route.path !== '/interactions-all' &&
+              $route.path !== '/interactions/${interaction._id}'
             "
           >
             <svg
@@ -362,7 +363,8 @@ export default {
             @click="toggleAddForm"
             v-if="
               $route.path !== '/dashboard' &&
-              $route.path !== '/interactions-all'
+              $route.path !== '/interactions-all' &&
+              $route.path !== '/interactions/${interaction._id}'
             "
           >
             <svg

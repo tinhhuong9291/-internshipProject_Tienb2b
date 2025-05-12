@@ -4,6 +4,7 @@
   "main": "src/server.js",
   "license": "MIT",
   "dependencies": {
+    "@sendgrid/mail": "^8.1.5",
     "body-parser": "^2.2.0",
     "cors": "^2.8.5",
     "dotenv": "^16.5.0",

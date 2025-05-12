@@ -3,27 +3,6 @@
     <div class="page-header">
       <h2>All Interactions</h2>
       <div class="header-actions">
-        <!-- <div class="search-bar">
-          <svg
-            width="18"
-            height="18"
-            fill="none"
-            stroke="currentColor"
-            stroke-width="2"
-            stroke-linecap="round"
-            stroke-linejoin="round"
-            viewBox="0 0 24 24"
-          >
-            <circle cx="11" cy="11" r="8" />
-            <line x1="21" y1="21" x2="16.65" y2="16.65" />
-          </svg>
-          <input
-            type="text"
-            placeholder="Search interactions..."
-            v-model="searchQuery"
-            @input="handleSearch"
-          />
-        </div> -->
         <div class="filter-section">
           <select v-model="filterType" @change="handleFilterChange">
             <option value="">All Types</option>
@@ -57,9 +36,11 @@
           >
             <!-- fix loi khong load duoc customer name -->
             <td>
-              {{
+              <!-- {{
                 interaction.customerName || interaction.customer?.name || "N/A"
-              }}
+              }} -->
+
+              {{ interaction.customerId || "N/A" }}
             </td>
             <td>
               <span :class="['type-badge', interaction.type]">
@@ -182,8 +163,9 @@ const handleFilterChange = () => {
 };
 
 const viewInteraction = (interaction) => {
-  // Navigate to interaction details or show modal
-  router.push(`/interactions/${interaction._id}`);
+  // Navigate to interaction details of the customer
+  const customerId = interaction.customerId || "N/A";
+  router.push(`/interactions/${customerId}`);
 };
 
 // Initialize component

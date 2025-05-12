@@ -15,16 +15,25 @@ app.use(express.static(path.join(__dirname, "../vue_project/dist")));
 const allowedOrigins = [
   "http://localhost:3000",
   "https://internship-project-tienb2b-mnkw4j2gy.vercel.app",
+  "https://internshipproject-tienb2b.onrender.com/api/interactions",
+  "https://internshipproject-tienb2b.onrender.com/api/interactions-all",
+  "https://internshipproject-tienb2b.onrender.com/api/customers",
+  "https://internshipproject-tienb2b.onrender.com/api/tasks",
+  "https://internshipproject-tienb2b.onrender.com/api/users",
+  "https://internshipproject-tienb2b.onrender.com/api/email",
 ];
 
 // app.use(
 //   cors({
 //     origin: function (origin, callback) {
-//       if (!origin || allowedOrigins.includes(origin)) {
-//         callback(null, true);
-//       } else {
-//         callback(new Error("Not allowed by CORS"));
+//       // allow requests with no origin
+//       // (like mobile apps or curl requests)
+//       if (!origin) return callback(null, true);
+//       if (allowedOrigins.indexOf(origin) === -1) {
+//         const msg = "The CORS policy for this site does not " + "allow access from the specified Origin.";
+//         return callback(new Error(msg), false);
 //       }
+//       return callback(null, true);
 //     },
 //   })
 // );
@@ -35,16 +44,6 @@ app.use(
   })
 );
 
-// app.use(
-//   cors({
-//     origin: [
-//       "http://localhost:3001",
-//       "http://localhost:3000",
-//       "https://internship-project-tienb2b-mnkw4j2gy.vercel.app",
-//     ],
-//     credentials: true,
-//   })
-// );
 app.use(bodyParser.json());
 
 // Connect to MongoDB

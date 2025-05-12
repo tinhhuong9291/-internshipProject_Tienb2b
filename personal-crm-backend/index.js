@@ -8,11 +8,7 @@ const app = express();
 
 // Middleware
 const cors = require("cors");
-// app.use(
-//   cors({
-//     origin: "https://internship-project-tienb2b-mnkw4j2gy.vercel.app",
-//   })
-// );
+
 const allowedOrigins = [
   "http://localhost:3000",
   "https://internship-project-tienb2b-mnkw4j2gy.vercel.app",

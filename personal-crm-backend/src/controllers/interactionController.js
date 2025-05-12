@@ -13,6 +13,29 @@ exports.getAll = async (req, res) => {
   }
 };
 
+// Get all interactions by customer ID
+exports.getAllByCustomerId = async (req, res) => {
+  try {
+    const { customerId } = req.params;
+    if (!mongoose.Types.ObjectId.isValid(customerId)) {
+      return res.status(400).json({ message: "Invalid customerId" });
+    }
+    const interactions = await Interaction.find({
+      customerId: customerId,
+    }).sort({
+      date: -1,
+    });
+    res.status(200).json(interactions);
+  } catch (err) {
+    res
+      .status(500)
+      .json({
+        message: "Error fetching all customer interactions",
+        error: err,
+      });
+  }
+};
+
 // Get interactions by customer ID
 
 exports.getByCustomerId = async (req, res) => {
