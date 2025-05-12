@@ -30,7 +30,7 @@ A full-stack personal CRM system to manage your customers, clients, partners, or
 
 - Vue 3 (Options API)
 - Tailwind CSS (optional)
-- Fetch API for communication
+- Fetch API 
 
 ---
 
