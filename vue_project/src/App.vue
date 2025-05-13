@@ -308,7 +308,8 @@ export default {
             v-if="
               $route.path !== '/dashboard' &&
               $route.path !== '/interactions-all' &&
-              $route.path !== '/interactions/${interaction._id}'
+              $route.path !== '/interactions/${interaction._id}' &&
+              $route.path !== '/tasks'
             "
           >
             <svg
@@ -364,7 +365,8 @@ export default {
             v-if="
               $route.path !== '/dashboard' &&
               $route.path !== '/interactions-all' &&
-              $route.path !== '/interactions/${interaction._id}'
+              $route.path !== '/interactions/${interaction._id}' &&
+              $route.path !== '/tasks'
             "
           >
             <svg
@@ -392,7 +394,8 @@ export default {
           $route.path === '/dashboard' ||
           $route.path.includes('/interactions/') ||
           $route.path.includes('/edit-customer/') ||
-          $route.path === '/interactions-all'
+          $route.path === '/interactions-all' ||
+          $route.path === '/tasks'
         "
       ></router-view>
 
